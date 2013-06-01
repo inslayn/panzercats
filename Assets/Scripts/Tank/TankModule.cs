@@ -7,36 +7,28 @@ public class TankModule : MonoBehaviour {
 	TankModule referenceModule = null;
 		
 	[SerializeField]
-	int damage = 0, maxHP = 100;
+	int maxHP = 1;
+
+	int currentHP = 1;
 		
-	int currentHP;
-	bool destroyed = false;
-	
-	float totalHits = 0f;
+	public bool Destroyed {
+		get {
+			return this.currentHP == 0;
+		}
+	}
+
 	Color currentColour = Color.white;
 
 	//Parameter is percentage of HP left
 	public event System.Action<float> Damaged;
-	
-	//====================================================================//
-	
-	public bool Destroyed {
-		get {
-			return this.destroyed;
-		}
-	}	
-	
+
 	//====================================================================//
 	
 	void Start()
 	{
-		if(damage == 0)
-		{
-			Debug.Log("You didn't set up the damage for " + gameObject.name);	
-		}
-		
-		totalHits = (maxHP / damage) / 255f;
-		
+		currentHP = maxHP;
+		if(renderer != null)
+			renderer.material.SetColor("_Color", Color.white);
 		EnableModule();
 	}
 	
@@ -44,62 +36,58 @@ public class TankModule : MonoBehaviour {
 	
 	void DisableModule()
 	{
-		destroyed = true;
+
 	}
-	
-	//====================================================================//
-	
-	void DamageReferenceModule()
-	{
-		referenceModule.WasHit();	
-	}
-	
+
 	//====================================================================//
 	
 	public void EnableModule()
 	{
-		if(renderer != null)
-			renderer.material.SetColor("_Color", Color.white);
-		
-		currentHP = maxHP;
-		destroyed = false;
-	}
-	
-	//====================================================================//
-	
-	public void WasHit()
-	{
-		TakeDamage(damage);
+
+
 	}
 	
 	//====================================================================//
 	
 	public void TakeDamage(int damagePoints)
 	{
-		if(!destroyed)
+		if(!Destroyed)
 		{
 			Debug.Log ("Module taken damage: " + name + ". remaining HP: " + currentHP );
 
 			currentHP -= damagePoints;
 		
-			if(currentHP <= 0)
-				DisableModule();
-		
-			if(renderer != null)
-			{
-				currentColour = Color.Lerp(Color.white, Color.red, 1f - (float)currentHP/maxHP);
-				renderer.material.SetColor("_Color", currentColour);
-			}
-
 			OnDamaged();
+
+			if( Destroyed ) {
+				DisableModule();
+			}
 		}
 		else if(referenceModule != null)
 		{
-			DamageReferenceModule();
+			referenceModule.TakeDamage(damagePoints);
+		}
+	}
+
+	void OnSerializeNetworkView( BitStream stream, NetworkMessageInfo info ) {
+		if( stream.isWriting ) {
+			stream.Serialize( ref currentHP );
+		} else {
+			stream.Serialize( ref currentHP );
+			OnDamaged();
 		}
 	}
 
 	protected void OnDamaged() {
+		if(currentHP <= 0)
+			DisableModule();
+		
+		if(renderer != null)
+		{
+			currentColour = Color.Lerp(Color.white, Color.red, 1f - (float)currentHP/maxHP);
+			renderer.material.SetColor("_Color", currentColour);
+		}
+
 		if( Damaged != null ) {
 			Damaged( (float)currentHP/maxHP );
 		}
@@ -109,6 +97,7 @@ public class TankModule : MonoBehaviour {
 		Rigidbody r = gameObject.AddComponent<Rigidbody>();
 		r.AddForce( 15f*Vector3.up + 15f*Random.onUnitSphere, ForceMode.Impulse );
 	}
+
 	//====================================================================//
 	/*
 	void OnCollisionEnter(Collision col)

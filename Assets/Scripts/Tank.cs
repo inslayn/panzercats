@@ -150,18 +150,20 @@ public class Tank : MonoBehaviour {
 	//----------------------------------------------------------------------------------------
 	
 	void OnCollisionEnter(Collision col)
-	{		
-		if(col.collider.CompareTag("Bullet"))
-		{
-			foreach(ContactPoint c in col.contacts) {
-				if( c.thisCollider ) {
-					TankModule m = c.thisCollider.GetComponent<TankModule>();
-					if( m ) {
-						m.WasHit();
+	{	
+		if( Network.isServer ) {
+			if(col.collider.CompareTag("Bullet"))
+			{
+				foreach(ContactPoint c in col.contacts) {
+					if( c.thisCollider ) {
+						TankModule m = c.thisCollider.GetComponent<TankModule>();
+						if( m ) {
+							m.TakeDamage(1);
 						}
 					}
 				}
 
+			}
 		}
 			//networkView.RPC("TakeDamage", RPCMode.Others, 5f);
 		//	TakeDamage(5f);
