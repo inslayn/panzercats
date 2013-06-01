@@ -14,54 +14,62 @@ public class Tank : MonoBehaviour {
 
 	[SerializeField]
 	Camera tankCamera = null;
-
+	
 	Transform cachedTransform;
 	
-	float speed = 2f, rotationSpeed = 100f, vertical, horizontal;
-
+	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
+	
 	//----------------------------------------------------------------------------------------
 	
 	void Start()	
 	{
 		enabled = networkView.isMine;
-		tankCamera.enabled = networkView.isMine;
-
+		
 		cachedTransform = transform;
 		
 		InvokeRepeating("CheckParticles", 0.1f, 1f);
 	}
 	
 	//----------------------------------------------------------------------------------------
-	
-	void FixedUpdate () 
-	{
-		vertical = Input.GetAxis("Vertical"); 
-		horizontal = Input.GetAxis("Horizontal");
 
-		Vector3 thrustVector = cachedTransform.forward;
-		thrustVector.y = 0f;
+	void FixedUpdate() {
 
-		float forwardThrottle = vertical;
-		float leftThrottle = horizontal+vertical;
-		float rightThrottle = -horizontal+vertical;
+		if(!isDead)
+		{
+			vertical = Input.GetAxis("Vertical"); 
+			horizontal = Input.GetAxis("Horizontal");
+			
+			Vector3 thrustVector = cachedTransform.forward;
+			thrustVector.y = 0f;
+			
+			float forwardThrottle = vertical;
+			float leftThrottle = horizontal+vertical;
+			float rightThrottle = -horizontal+vertical;
+			
+			float treadDifference = leftThrottle-rightThrottle;
+			
+			rigidbody.AddTorque( 0, 10f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
+			rigidbody.AddForce( 100f*(leftThrottle+rightThrottle)*thrustVector );
 
-		float treadDifference = leftThrottle-rightThrottle;
-
-		rigidbody.AddTorque( 0, 10f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
-		rigidbody.AddForce( 100f*(leftThrottle+rightThrottle)*thrustVector );
-
+		}
 	}
 
 	void Update() {
-		if(Input.GetKeyDown(KeyCode.Space))
-			StartCoroutine(FireBullet());
+		if(!isDead)
+		{
+			if(Input.GetKeyDown(KeyCode.Space))
+				StartCoroutine(FireBullet());
+		}
 	}
 
+	
 	//----------------------------------------------------------------------------------------
 	
 	IEnumerator FireBullet()
 	{
 		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, turrentTransform.position, Quaternion.identity, 0);
+		
+		Physics.IgnoreCollision(bullet.collider, transform.collider);
 		
 		bullet.transform.parent = transform.parent;
 		
@@ -81,7 +89,7 @@ public class Tank : MonoBehaviour {
 //		
 //		ResetBullet(b);
 		
-		Network.Destroy(bullet);
+		Network.Destroy(bullet.GetComponent<NetworkView>().viewID);
 	}
 	
 	//----------------------------------------------------------------------------------------
@@ -112,17 +120,21 @@ public class Tank : MonoBehaviour {
 	//----------------------------------------------------------------------------------------
 	
 	void OnCollisionEnter(Collision c)
-	{
+	{		
 		if(c.collider.CompareTag("Bullet"))
-			print("Collision");
+			//networkView.RPC("TakeDamage", RPCMode.Others, 5f);
+			TakeDamage(5f);
 	}
 	
 	//----------------------------------------------------------------------------------------
 	
-	[RPC]
 	void TakeDamage(float amount)
 	{
-//		if(Network.isServer)
-			
+		Mathf.Clamp(health -= amount, 0f, 100f);
+		
+		if(health <= 0)
+			isDead = true;
 	}
+	
+	bool isDead;
 }
