@@ -70,14 +70,14 @@ public class TankModule : MonoBehaviour {
 		}
 	}
 
-//	void OnSerializeNetworkView( BitStream stream, NetworkMessageInfo info ) {
-//		if( stream.isWriting ) {
-//			stream.Serialize( ref currentHP );
-//		} else {
-//			stream.Serialize( ref currentHP );
-//			OnDamaged();
-//		}
-//	}
+	void OnSerializeNetworkView( BitStream stream, NetworkMessageInfo info ) {
+		if( stream.isWriting ) {
+			stream.Serialize( ref currentHP );
+		} else {
+			stream.Serialize( ref currentHP );
+			OnDamaged();
+		}
+	}
 
 	protected void OnDamaged() {
 		Debug.Log ("Module HP: " + name + " = " + currentHP );
@@ -97,9 +97,11 @@ public class TankModule : MonoBehaviour {
 	}
 
 	public void Detach() {
-		transform.parent = null;
-		Rigidbody r = gameObject.AddComponent<Rigidbody>();
-		r.AddForce( 15f*Vector3.up + 15f*Random.onUnitSphere, ForceMode.Impulse );
+		if( transform.parent ) {
+			transform.parent = null;
+			Rigidbody r = gameObject.AddComponent<Rigidbody>();
+			r.AddForce( 15f*Vector3.up + 15f*Random.onUnitSphere, ForceMode.Impulse );
+		}
 	}
 
 	//====================================================================//
