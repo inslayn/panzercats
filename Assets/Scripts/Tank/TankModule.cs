@@ -108,7 +108,7 @@ public class TankModule : MonoBehaviour {
 
 	public void Detach() {
 		Rigidbody r = gameObject.AddComponent<Rigidbody>();
-		r.AddForce( 30f*Random.onUnitSphere, ForceMode.Impulse );
+		r.AddForce( 15f*Vector3.up + 15f*Random.onUnitSphere, ForceMode.Impulse );
 	}
 	//====================================================================//
 	/*
