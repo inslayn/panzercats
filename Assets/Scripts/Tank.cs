@@ -7,16 +7,20 @@ public class Tank : MonoBehaviour {
 	ParticleSystem dustParticle = null;
 	
 	[SerializeField]
-	Transform turrentTransform;
-	
-	[SerializeField]
 	GameObject bulletPrefab;
-	
+
+	[SerializeField]
+	Camera tankCamera = null;
+
+	[SerializeField]
+	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null;
+
+	[SerializeField]
+	Collider cannonCollider = null;
+
 	Transform cachedTransform;
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
-	
-	bool isDead;
 	
 	//----------------------------------------------------------------------------------------
 	
@@ -30,58 +34,53 @@ public class Tank : MonoBehaviour {
 	}
 	
 	//----------------------------------------------------------------------------------------
-	
-	void FixedUpdate () 
-	{
-		vertical = Input.GetAxis("Vertical"); 
-		horizontal = Input.GetAxis("Horizontal");
 
-		Vector3 thrustVector = cachedTransform.forward;
-		thrustVector.y = 0f;
+	void FixedUpdate() {
 
-		float forwardThrottle = vertical;
-		float leftThrottle = horizontal+vertical;
-		float rightThrottle = -horizontal+vertical;
+		if(!isDead)
+		{
+			vertical = Input.GetAxis("Vertical"); 
+			horizontal = Input.GetAxis("Horizontal");
+			
+			Vector3 thrustVector = cachedTransform.forward;
+			thrustVector.y = 0f;
+			
+			float forwardThrottle = vertical;
+			float leftThrottle = horizontal+vertical;
+			float rightThrottle = -horizontal+vertical;
+			
+			float treadDifference = leftThrottle-rightThrottle;
+			
+			rigidbody.AddTorque( 0, 10f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
+			rigidbody.AddForce( 100f*(leftThrottle+rightThrottle)*thrustVector );
 
-		float treadDifference = leftThrottle-rightThrottle;
-
-		rigidbody.AddTorque( 0, 0.1f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
-		rigidbody.AddForce( 10f*(leftThrottle+rightThrottle)*thrustVector );
+		}
 	}
-	
-	//----------------------------------------------------------------------------------------
-	
-	void Update() 
-	{
-		if(Input.GetKeyDown(KeyCode.Space))
-			StartCoroutine(FireBullet());
+
+	void Update() {
+		if(!isDead)
+		{
+			if(Input.GetKeyDown(KeyCode.Space))
+				StartCoroutine(FireBullet());
+		}
 	}
+
 	
 	//----------------------------------------------------------------------------------------
 	
 	IEnumerator FireBullet()
 	{
-		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, turrentTransform.position, Quaternion.identity, 0);
+		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity, 0);
 		
-		Physics.IgnoreCollision(bullet.collider, transform.collider);
+		Physics.IgnoreCollision(bullet.collider, cannonCollider );
 		
 		bullet.transform.parent = transform.parent;
-		
-//		GameObject b = ObjectPooler.Instance.BulletPool[0];
-//		
-//		b.SetActive(true);
-//		
-//		ObjectPooler.Instance.BulletPool.Remove(b);
-//		
-//		b.transform.position = turrentTransform.position;
-//		
-//		b.transform.rotation = Quaternion.identity;
-//		
+
+		Vector3 spawnPointVelocity = rigidbody.GetPointVelocity( bulletSpawnTransform.position );
+		bullet.rigidbody.velocity = spawnPointVelocity;
 		bullet.rigidbody.AddForce(cachedTransform.forward * 10f, ForceMode.Impulse);
-//		
+
 		yield return new WaitForSeconds(0.5f);
-//		
-//		ResetBullet(b);
 		
 		Network.Destroy(bullet.GetComponent<NetworkView>().viewID);
 	}
@@ -128,5 +127,7 @@ public class Tank : MonoBehaviour {
 		
 		if(health <= 0)
 			isDead = true;
-	}	
+	}
+	
+	bool isDead;
 }
