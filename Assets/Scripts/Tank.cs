@@ -53,7 +53,7 @@ public class Tank : MonoBehaviour {
 			
 			float treadDifference = leftThrottle-rightThrottle;
 			
-			rigidbody.AddTorque( 0, 10f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
+			rigidbody.AddTorque( 0, 10f*(treadDifference * rotationSpeed)/(1f+3f*rigidbody.velocity.magnitude), 0 );
 			rigidbody.AddForce( 100f*(leftThrottle+rightThrottle)*thrustVector );
 
 		}
@@ -65,14 +65,14 @@ public class Tank : MonoBehaviour {
 	void Update() {
 		if(!isDead)
 		{
-			if(Input.GetKeyDown(KeyCode.Space))
+			if(Input.GetMouseButtonDown(0))
 				StartCoroutine(FireBullet());
 
 			Vector3 mouseDelta = Input.mousePosition-lastMousePosition;
 			lastMousePosition = Input.mousePosition;
 
 			turretTransform.Rotate( -mouseDelta.x*30f*Time.deltaTime, 0f, 0f );
-			cannonTransform.Rotate( 0f, -mouseDelta.y*30f*Time.deltaTime, 0f );
+			cannonTransform.Rotate( 0f, mouseDelta.y*30f*Time.deltaTime, 0f );
 
 			Vector3 turretAngles = cannonTransform.localEulerAngles;
 			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-15f, 270f+15f );
@@ -94,9 +94,9 @@ public class Tank : MonoBehaviour {
 
 		Vector3 spawnPointVelocity = rigidbody.GetPointVelocity( bulletSpawnTransform.position );
 		bullet.rigidbody.velocity = spawnPointVelocity;
-		bullet.rigidbody.AddForce(cachedTransform.forward * 10f, ForceMode.Impulse);
+		bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 40f, ForceMode.Impulse);
 
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(1f);
 		
 		Network.Destroy(bullet.GetComponent<NetworkView>().viewID);
 	}
