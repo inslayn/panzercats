@@ -23,7 +23,7 @@ public class Tank : MonoBehaviour {
 
 	Transform cachedTransform;
 	
-	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
+	float speed = 2f, rotationSpeed = 200f, vertical, horizontal;
 
 	float fireCooldownTime;
 
@@ -50,9 +50,14 @@ public class Tank : MonoBehaviour {
 			foreach( TankModule m in modules ) {
 				if( m != commandModule ) {
 					m.Detach();
+					Invoke ("NetworkDestroy",10f);
 				}
 			}
 		}
+	}
+
+	void NetworkDestroy() {
+		Network.Destroy( gameObject );
 	}
 	//----------------------------------------------------------------------------------------
 
@@ -168,19 +173,9 @@ public class Tank : MonoBehaviour {
 
 			}
 		}
-			//networkView.RPC("TakeDamage", RPCMode.Others, 5f);
-		//	TakeDamage(5f);
+
 	}
-	
-	//----------------------------------------------------------------------------------------
-	
-	void TakeDamage(float amount)
-	{
-		Mathf.Clamp(health -= amount, 0f, 100f);
-		
-		if(health <= 0)
-			isDead = true;
-	}
+
 	
 	bool isDead;
 }
