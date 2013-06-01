@@ -13,12 +13,6 @@ public class Tank : MonoBehaviour {
 	GameObject bulletPrefab;
 
 	[SerializeField]
-	Transform leftTread = null, rightTread = null;
-
-	[SerializeField]
-	WheelCollider[] leftWheelColliders = null, rightWheelColliders;
-
-	[SerializeField]
 	Camera tankCamera = null;
 
 	Transform cachedTransform;
@@ -53,9 +47,8 @@ public class Tank : MonoBehaviour {
 
 		float treadDifference = leftThrottle-rightThrottle;
 
-		rigidbody.AddTorque( 0, 0.1f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
-		rigidbody.AddForce( 10f*(leftThrottle+rightThrottle)*thrustVector );
-
+		rigidbody.AddTorque( 0, 10f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
+		rigidbody.AddForce( 100f*(leftThrottle+rightThrottle)*thrustVector );
 
 	}
 
