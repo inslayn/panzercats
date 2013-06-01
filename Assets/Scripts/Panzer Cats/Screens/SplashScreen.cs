@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class SplashScreen : U9View {
-
-    protected override U9Transition CreateDisplayTransition(bool force) {
-        return U9T.Null();
+public class SplashScreen : U9FadeView {
+    protected override void EndHide() {
+        base.EndHide();
+        LoadTitles();
     }
 
-    protected override U9Transition CreateHideTransition(bool force) {
-        return U9T.Null();
+    void LoadTitles() {
+        GameManager.Instance.Show(GameManager.Screens.Title);
     }
 }

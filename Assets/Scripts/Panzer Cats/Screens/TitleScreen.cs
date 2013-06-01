@@ -1,13 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-public class TitleScreen : U9View {
+public class TitleScreen : U9SlideView {
 
-    protected override U9Transition CreateDisplayTransition(bool force) {
-        return U9T.Null();
-    }
-
-    protected override U9Transition CreateHideTransition(bool force) {
-        return U9T.Null();
-    }
 }
