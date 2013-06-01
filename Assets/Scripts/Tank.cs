@@ -16,6 +16,8 @@ public class Tank : MonoBehaviour {
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
 	
+	bool isDead;
+	
 	//----------------------------------------------------------------------------------------
 	
 	void Start()	
@@ -29,23 +31,30 @@ public class Tank : MonoBehaviour {
 	
 	//----------------------------------------------------------------------------------------
 	
-	void Update () 
+	void FixedUpdate () 
 	{
-		if(!isDead)
-		{
-			vertical = Input.GetAxis("Vertical"); 
-			horizontal = Input.GetAxis("Horizontal");
-			
-			if(vertical != 0)
-	//			cachedTransform.rigidbody.AddRelativeForce(Vector3.forward * speed * Time.deltaTime);
-	        	cachedTransform.Translate(Vector3.forward * vertical * speed * Time.deltaTime);
-			
-			if(horizontal != 0)
-	        	cachedTransform.Rotate(0, (horizontal * rotationSpeed) * Time.deltaTime, 0);
-			
-			if(Input.GetKeyDown(KeyCode.Space))
-				StartCoroutine(FireBullet());
-		}
+		vertical = Input.GetAxis("Vertical"); 
+		horizontal = Input.GetAxis("Horizontal");
+
+		Vector3 thrustVector = cachedTransform.forward;
+		thrustVector.y = 0f;
+
+		float forwardThrottle = vertical;
+		float leftThrottle = horizontal+vertical;
+		float rightThrottle = -horizontal+vertical;
+
+		float treadDifference = leftThrottle-rightThrottle;
+
+		rigidbody.AddTorque( 0, 0.1f*(treadDifference * rotationSpeed)/(1f+5f*rigidbody.velocity.magnitude), 0 );
+		rigidbody.AddForce( 10f*(leftThrottle+rightThrottle)*thrustVector );
+	}
+	
+	//----------------------------------------------------------------------------------------
+	
+	void Update() 
+	{
+		if(Input.GetKeyDown(KeyCode.Space))
+			StartCoroutine(FireBullet());
 	}
 	
 	//----------------------------------------------------------------------------------------
@@ -119,7 +128,5 @@ public class Tank : MonoBehaviour {
 		
 		if(health <= 0)
 			isDead = true;
-	}
-	
-	bool isDead;
+	}	
 }
