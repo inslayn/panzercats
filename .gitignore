@@ -2,6 +2,10 @@ Library/
 Temp/
 Assets/Scenes/UITest.unity
 Assets/Scenes/UITest.unity.meta
+<<<<<<< HEAD
+Assets/NGUI/Examples/
+Assets/NGUI/Examples.meta
+=======
 panzer-cats-csharp.sln
 panzer-cats.sln
 Assembly-CSharp-Editor-vs.csproj
@@ -14,3 +18,4 @@ Assembly-CSharp-vs.csproj
 Assembly-CSharp.csproj
 Assembly-CSharp-Editor.pidb
 Assembly-CSharp.pidb
+>>>>>>> b38989cc8386bea3fe4d19a874b02429c452cd5c
