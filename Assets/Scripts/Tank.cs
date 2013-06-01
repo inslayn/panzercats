@@ -41,7 +41,7 @@ public class Tank : MonoBehaviour {
 		if(horizontal != 0)
         	cachedTransform.Rotate(0, (horizontal * rotationSpeed) * Time.deltaTime, 0);
 		
-		if(Input.GetKey(KeyCode.Space))
+		if(Input.GetKeyDown(KeyCode.Space))
 			StartCoroutine(FireBullet());
 	}
 	
@@ -50,6 +50,8 @@ public class Tank : MonoBehaviour {
 	IEnumerator FireBullet()
 	{
 		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, turrentTransform.position, Quaternion.identity, 0);
+		
+		bullet.transform.parent = transform.parent;
 		
 //		GameObject b = ObjectPooler.Instance.BulletPool[0];
 //		
@@ -93,5 +95,22 @@ public class Tank : MonoBehaviour {
 			dustParticle.Play();
 		else if(vertical == 0 && dustParticle.isPlaying)
 			dustParticle.Stop();
+	}
+	
+	//----------------------------------------------------------------------------------------
+	
+	void OnCollisionEnter(Collision c)
+	{
+		if(c.collider.CompareTag("Bullet"))
+			print("Collision");
+	}
+	
+	//----------------------------------------------------------------------------------------
+	
+	[RPC]
+	void TakeDamage(float amount)
+	{
+//		if(Network.isServer)
+			
 	}
 }

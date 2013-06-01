@@ -39,17 +39,17 @@ public class NetworkingManager : MonoBehaviour {
 		Network.DestroyPlayerObjects(Network.player);
 	}
 	
-	void OnGUI()
-	{
+	void Update()
+	{	
 		if(Network.peerType == NetworkPeerType.Disconnected)
 		{
-			if(GUILayout.Button("Connect"))
+			if(Input.GetKeyDown(KeyCode.Equals))
 				Network.Connect(serverIP, serverPort);
 		
-			if(GUILayout.Button("New Server"))
+			if(Input.GetKeyDown(KeyCode.N))
 				Network.InitializeServer(32, serverPort, true);
 		}
-		else if(GUILayout.Button("Disconnect"))
+		else if(Input.GetKeyDown(KeyCode.Minus))
 			Network.Disconnect();
 	}
 }
