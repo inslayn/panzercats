@@ -18,6 +18,9 @@ public class Tank : MonoBehaviour {
 	[SerializeField]
 	Collider cannonCollider = null;
 
+	[SerializeField]
+	TankModule commandModule = null;
+
 	Transform cachedTransform;
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
@@ -36,8 +39,21 @@ public class Tank : MonoBehaviour {
 		InvokeRepeating("CheckParticles", 0.1f, 1f);
 
 		lastMousePosition = Input.mousePosition;
+
+		commandModule.Damaged += HandleDamaged;
 	}
-	
+
+	void HandleDamaged( float percentageHealth ) {
+		if( percentageHealth <= 0f ) {
+			isDead = true;
+			TankModule[] modules = GetComponentsInChildren<TankModule>();
+			foreach( TankModule m in modules ) {
+				if( m != commandModule ) {
+					m.Detach();
+				}
+			}
+		}
+	}
 	//----------------------------------------------------------------------------------------
 
 	void FixedUpdate() {
@@ -92,7 +108,7 @@ public class Tank : MonoBehaviour {
 	IEnumerator FireBullet()
 	{
 		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity, 0);
-		
+
 		Physics.IgnoreCollision(bullet.collider, cannonCollider );
 		
 		bullet.transform.parent = transform.parent;
