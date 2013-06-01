@@ -44,6 +44,16 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AudioToolkit\AudioToolkit\AudioController.cs" />
+     <Compile Include="Assets\AudioToolkit\AudioToolkit\AudioItem.cs" />
+     <Compile Include="Assets\AudioToolkit\AudioToolkit\AudioLog.cs" />
+     <Compile Include="Assets\AudioToolkit\AudioToolkit\AudioObject.cs" />
+     <Compile Include="Assets\AudioToolkit\Shared Auxiliary Code\ArrayHelper.cs" />
+     <Compile Include="Assets\AudioToolkit\Shared Auxiliary Code\FlashSupport.cs" />
+     <Compile Include="Assets\AudioToolkit\Shared Auxiliary Code\PoolableObject.cs" />
+     <Compile Include="Assets\AudioToolkit\Shared Auxiliary Code\RegisteredComponent.cs" />
+     <Compile Include="Assets\AudioToolkit\Shared Auxiliary Code\SystemTime.cs" />
+     <Compile Include="Assets\AudioToolkit\Shared Auxiliary Code\UnitySingleton.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\LanguageSelection.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\UIButton.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\UIButtonActivate.cs" />
@@ -145,14 +155,60 @@
      <Compile Include="Assets\OVR\Scripts\OVRPlayerController.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRPresetManager.cs" />
      <Compile Include="Assets\OVR\Scripts\OVRUtils.cs" />
-     <Compile Include="Assets\Scripts\MonoSingleton.cs" />
+     <Compile Include="Assets\PathologicalGames\Plugins\PoolManager\PoolManager.cs" />
+     <Compile Include="Assets\PathologicalGames\Plugins\PoolManager\PreRuntimePoolItem.cs" />
+     <Compile Include="Assets\PathologicalGames\Plugins\PoolManager\SpawnPool.cs" />
      <Compile Include="Assets\Scripts\NetworkingManager.cs" />
      <Compile Include="Assets\Scripts\ObjectPooler.cs" />
      <Compile Include="Assets\Scripts\Tank.cs" />
+     <Compile Include="Assets\Scripts\Tank\TankModule.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\U9Button.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\U9DragArea.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\U9NGUIUtils.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UIExtrudedSprite.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UIGridSprite.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UIGridSpriteInfo.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UIImageFont.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UIImageFontLabel.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UIPanelManager.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UIPerspectivePixelPerfect.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\UISheenSprite.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\WidgetFader.cs" />
+     <Compile Include="Assets\U9\NGUIExtensions\ZStack.cs" />
+     <Compile Include="Assets\U9\U9Transition\TransitionEventArgs.cs" />
+     <Compile Include="Assets\U9\U9Transition\Transitions\InstantTransition.cs" />
+     <Compile Include="Assets\U9\U9Transition\Transitions\U9NullTransition.cs" />
+     <Compile Include="Assets\U9\U9Transition\Transitions\U9ParallelTransition.cs" />
+     <Compile Include="Assets\U9\U9Transition\Transitions\U9SerialTransition.cs" />
+     <Compile Include="Assets\U9\U9Transition\Transitions\U9WaitTransition.cs" />
+     <Compile Include="Assets\U9\U9Transition\Transitions\U9iTweenTransition.cs" />
+     <Compile Include="Assets\U9\U9Transition\U9T.cs" />
+     <Compile Include="Assets\U9\U9Transition\U9Transition.cs" />
+     <Compile Include="Assets\U9\U9Transition\U9TransitionQueue.cs" />
+     <Compile Include="Assets\U9\U9View\U9CompositeView.cs" />
+     <Compile Include="Assets\U9\U9View\U9FadeView.cs" />
+     <Compile Include="Assets\U9\U9View\U9ScaleView.cs" />
+     <Compile Include="Assets\U9\U9View\U9SlideView.cs" />
+     <Compile Include="Assets\U9\U9View\U9TransitionView.cs" />
+     <Compile Include="Assets\U9\U9View\U9View.cs" />
+     <Compile Include="Assets\U9\U9View\U9ViewStack.cs" />
+     <Compile Include="Assets\U9\Utils\FormatUtils.cs" />
+     <Compile Include="Assets\U9\Utils\LayerMaskExtensions.cs" />
+     <Compile Include="Assets\U9\Utils\MiniJSON.cs" />
+     <Compile Include="Assets\U9\Utils\MonoMultiton.cs" />
+     <Compile Include="Assets\U9\Utils\MonoSingleton.cs" />
+     <Compile Include="Assets\U9\Utils\ObjectPicker.cs" />
+     <Compile Include="Assets\U9\Utils\Subject.cs" />
+     <Compile Include="Assets\U9\Utils\TransformUtils.cs" />
+     <Compile Include="Assets\U9\Utils\TypeUtils.cs" />
+     <Compile Include="Assets\U9\Utils\U9EventManager.cs" />
+     <Compile Include="Assets\iTween\Plugins\iTween.cs" />
+     <None Include="Assets\AudioToolkit\Readme.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (AlphaClip).shader" />
+     <None Include="Assets\HOTween\HOTween_License.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (SoftClip).shader" />
@@ -167,6 +223,9 @@
      <None Include="Assets\OVR\Shaders\OVRGUIShader.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Depth.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
+ <Reference Include="HOTweenMicro">
+ <HintPath>Assets\HOTween\HOTweenMicro.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
