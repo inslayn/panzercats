@@ -31,7 +31,7 @@ public class Tank : MonoBehaviour {
 	
 	void Update () 
 	{
-		vertical = Input.GetAxis("Vertical"); 
+/*		vertical = Input.GetAxis("Vertical"); 
 		horizontal = Input.GetAxis("Horizontal");
 		
 		if(vertical != 0)
@@ -40,7 +40,7 @@ public class Tank : MonoBehaviour {
 		
 		if(horizontal != 0)
         	cachedTransform.Rotate(0, (horizontal * rotationSpeed) * Time.deltaTime, 0);
-		
+		*/
 		if(Input.GetKey(KeyCode.Space))
 			StartCoroutine(FireBullet());
 	}
