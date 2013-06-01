@@ -12,6 +12,9 @@ public class TankModule : MonoBehaviour {
 	int currentHP;
 	bool damaged = false;
 	
+	float totalHits = 0f;
+	Color currentColour = Color.white;
+	
 	//====================================================================//
 	
 	public bool Damaged {
@@ -24,6 +27,14 @@ public class TankModule : MonoBehaviour {
 	
 	void Start()
 	{
+		Debug.Log (renderer.material);
+		if(damage == 0)
+		{
+			Debug.Log("You didn't set up the damage for " + gameObject.name);	
+		}
+		
+		totalHits = (maxHP / damage) / 255f;
+		
 		EnableModule();
 	}
 	
@@ -45,6 +56,9 @@ public class TankModule : MonoBehaviour {
 	
 	public void EnableModule()
 	{
+		if(renderer != null)
+			renderer.material.SetColor("_Color", Color.white);
+		
 		currentHP = maxHP;
 		damaged = false;
 	}
@@ -66,6 +80,12 @@ public class TankModule : MonoBehaviour {
 		
 			if(currentHP <= 0)
 				DisableModule();
+		
+			if(renderer != null)
+			{
+				currentColour = Color.Lerp(Color.white, Color.red, 1f - (float)currentHP/maxHP);
+				renderer.material.SetColor("_Color", currentColour);
+			}
 		}
 		else if(referenceModule != null)
 		{
@@ -74,15 +94,15 @@ public class TankModule : MonoBehaviour {
 	}
 	
 	//====================================================================//
-	
+	/*
 	void OnCollisionEnter(Collision col)
 	{
-		if(col.gameObject.CompareTag("bullet"))
+		if(col.collider.CompareTag("Bullet"))
 		{
 			WasHit();	
 		}
 	}
-	
+	*/
 	//====================================================================//
 	
 }

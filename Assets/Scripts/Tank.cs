@@ -26,7 +26,7 @@ public class Tank : MonoBehaviour {
 	
 	void Start()	
 	{
-		enabled = networkView.isMine;
+		//enabled = networkView.isMine;
 		tankCamera.enabled = networkView.isMine;
 
 		cachedTransform = transform;
@@ -40,7 +40,7 @@ public class Tank : MonoBehaviour {
 
 	void FixedUpdate() {
 
-		if(!isDead)
+		if(!isDead && networkView.isMine)
 		{
 			vertical = Input.GetAxis("Vertical"); 
 			horizontal = Input.GetAxis("Horizontal");
@@ -64,7 +64,7 @@ public class Tank : MonoBehaviour {
 	//Vector3 targetTurretAngles, targetCannonAngles;
 
 	void Update() {
-		if(!isDead)
+		if(!isDead && networkView.isMine)
 		{
 			if(Input.GetMouseButtonDown(0))
 				StartCoroutine(FireBullet());
@@ -129,11 +129,15 @@ public class Tank : MonoBehaviour {
 	
 	//----------------------------------------------------------------------------------------
 	
-	void OnCollisionEnter(Collision c)
+	void OnCollisionEnter(Collision col)
 	{		
-		if(c.collider.CompareTag("Bullet"))
+		if(col.collider.CompareTag("Bullet"))
+		{
+			foreach(ContactPoint c in col.contacts)
+				c.thisCollider.GetComponent<TankModule>().WasHit();
+		}
 			//networkView.RPC("TakeDamage", RPCMode.Others, 5f);
-			TakeDamage(5f);
+		//	TakeDamage(5f);
 	}
 	
 	//----------------------------------------------------------------------------------------
