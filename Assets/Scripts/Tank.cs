@@ -148,9 +148,12 @@ public class Tank : MonoBehaviour {
 	}
 	
 	//----------------------------------------------------------------------------------------
-	
+
+
+
 	void OnCollisionEnter(Collision col)
 	{	
+
 		if( Network.isServer ) {
 			if(col.collider.CompareTag("Bullet"))
 			{
@@ -158,7 +161,7 @@ public class Tank : MonoBehaviour {
 					if( c.thisCollider ) {
 						TankModule m = c.thisCollider.GetComponent<TankModule>();
 						if( m ) {
-							m.TakeDamage(1);
+							m.networkView.RPC( "TakeDamage", RPCMode.All, new object[]{1} );
 						}
 					}
 				}
