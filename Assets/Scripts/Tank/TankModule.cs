@@ -100,7 +100,7 @@ public class TankModule : MonoBehaviour {
 		if( transform.parent ) {
 			transform.parent = null;
 			Rigidbody r = gameObject.AddComponent<Rigidbody>();
-			r.AddForce( 15f*Vector3.up + 15f*Random.onUnitSphere, ForceMode.Impulse );
+			r.AddForce( 2f*Vector3.up + 3f*Random.onUnitSphere, ForceMode.Impulse );
 		}
 	}
 
