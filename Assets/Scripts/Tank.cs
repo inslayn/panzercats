@@ -31,6 +31,8 @@ public class Tank : MonoBehaviour {
 		cachedTransform = transform;
 		
 		InvokeRepeating("CheckParticles", 0.1f, 1f);
+
+		lastMousePosition = Input.mousePosition;
 	}
 	
 	//----------------------------------------------------------------------------------------
@@ -57,11 +59,25 @@ public class Tank : MonoBehaviour {
 		}
 	}
 
+	Vector3 lastMousePosition;
+	//Vector3 targetTurretAngles, targetCannonAngles;
+
 	void Update() {
 		if(!isDead)
 		{
 			if(Input.GetKeyDown(KeyCode.Space))
 				StartCoroutine(FireBullet());
+
+			Vector3 mouseDelta = Input.mousePosition-lastMousePosition;
+			lastMousePosition = Input.mousePosition;
+
+			turretTransform.Rotate( -mouseDelta.x*30f*Time.deltaTime, 0f, 0f );
+			cannonTransform.Rotate( 0f, -mouseDelta.y*30f*Time.deltaTime, 0f );
+
+			Vector3 turretAngles = cannonTransform.localEulerAngles;
+			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-15f, 270f+15f );
+			cannonTransform.localEulerAngles = turretAngles;
+
 		}
 	}
 
