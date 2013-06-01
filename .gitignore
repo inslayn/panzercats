@@ -2,5 +2,5 @@ Library/
 Temp/
 Assets/Scenes/UITest.unity
 Assets/Scenes/UITest.unity.meta
-panzer-cats-csharp.sln
-panzer-cats.sln
+Assets/NGUI/Examples/
+Assets/NGUI/Examples.meta
