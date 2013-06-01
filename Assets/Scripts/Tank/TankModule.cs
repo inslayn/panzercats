@@ -53,7 +53,7 @@ public class TankModule : MonoBehaviour {
 	{
 		if(!Destroyed)
 		{
-			Debug.Log ("Module taken damage: " + name + ". remaining HP: " + currentHP );
+
 
 			currentHP -= damagePoints;
 		
@@ -79,6 +79,8 @@ public class TankModule : MonoBehaviour {
 	}
 
 	protected void OnDamaged() {
+		Debug.Log ("Module HP: " + name + " = " + currentHP );
+
 		if(currentHP <= 0)
 			DisableModule();
 		
@@ -94,6 +96,7 @@ public class TankModule : MonoBehaviour {
 	}
 
 	public void Detach() {
+		transform.parent = null;
 		Rigidbody r = gameObject.AddComponent<Rigidbody>();
 		r.AddForce( 15f*Vector3.up + 15f*Random.onUnitSphere, ForceMode.Impulse );
 	}
