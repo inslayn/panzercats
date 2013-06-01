@@ -21,7 +21,9 @@ public class Tank : MonoBehaviour {
 	Transform cachedTransform;
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
-	
+
+	float fireCooldownTime;
+
 	//----------------------------------------------------------------------------------------
 	
 	void Start()	
@@ -66,8 +68,10 @@ public class Tank : MonoBehaviour {
 	void Update() {
 		if(!isDead)
 		{
-			if(Input.GetMouseButtonDown(0))
+			if( Time.time > fireCooldownTime && Input.GetMouseButtonDown(0)) {
+				fireCooldownTime = Time.time + 2f;
 				StartCoroutine(FireBullet());
+			}
 
 			Vector3 mouseDelta = Input.mousePosition-lastMousePosition;
 			lastMousePosition = Input.mousePosition;
@@ -97,7 +101,7 @@ public class Tank : MonoBehaviour {
 		bullet.rigidbody.velocity = spawnPointVelocity;
 		bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 40f, ForceMode.Impulse);
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(5f);
 		
 		Network.Destroy(bullet.GetComponent<NetworkView>().viewID);
 	}
