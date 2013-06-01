@@ -48,7 +48,8 @@ public class TankModule : MonoBehaviour {
 	}
 	
 	//====================================================================//
-	
+
+	[RPC]
 	public void TakeDamage(int damagePoints)
 	{
 		if(!Destroyed)
@@ -69,14 +70,14 @@ public class TankModule : MonoBehaviour {
 		}
 	}
 
-	void OnSerializeNetworkView( BitStream stream, NetworkMessageInfo info ) {
-		if( stream.isWriting ) {
-			stream.Serialize( ref currentHP );
-		} else {
-			stream.Serialize( ref currentHP );
-			OnDamaged();
-		}
-	}
+//	void OnSerializeNetworkView( BitStream stream, NetworkMessageInfo info ) {
+//		if( stream.isWriting ) {
+//			stream.Serialize( ref currentHP );
+//		} else {
+//			stream.Serialize( ref currentHP );
+//			OnDamaged();
+//		}
+//	}
 
 	protected void OnDamaged() {
 		Debug.Log ("Module HP: " + name + " = " + currentHP );
