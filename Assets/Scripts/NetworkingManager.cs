@@ -9,7 +9,7 @@ public class NetworkingManager : MonoBehaviour {
 	[SerializeField]
 	Transform spawnTransform;
 	
-	string serverIP = "127.0.0.1";
+	string serverIP = "172.21.10.252";
 	int serverPort = 30000;
 	
 	void OnServerInitialized()
