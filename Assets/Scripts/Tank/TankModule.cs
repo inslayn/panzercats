@@ -79,6 +79,8 @@ public class TankModule : MonoBehaviour {
 	{
 		if(!destroyed)
 		{
+			Debug.Log ("Module taken damage: " + name + ". remaining HP: " + currentHP );
+
 			currentHP -= damagePoints;
 		
 			if(currentHP <= 0)
