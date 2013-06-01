@@ -27,7 +27,8 @@ public class Tank : MonoBehaviour {
 	void Start()	
 	{
 		enabled = networkView.isMine;
-		
+		tankCamera.enabled = networkView.isMine;
+
 		cachedTransform = transform;
 		
 		InvokeRepeating("CheckParticles", 0.1f, 1f);
