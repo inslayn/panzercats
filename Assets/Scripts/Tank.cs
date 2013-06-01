@@ -120,7 +120,7 @@ public class Tank : MonoBehaviour {
 
 		Vector3 spawnPointVelocity = rigidbody.GetPointVelocity( bulletSpawnTransform.position );
 		bullet.rigidbody.velocity = spawnPointVelocity;
-		bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 40f, ForceMode.Impulse);
+		bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 80f, ForceMode.Impulse);
 
 		yield return new WaitForSeconds(5f);
 		
