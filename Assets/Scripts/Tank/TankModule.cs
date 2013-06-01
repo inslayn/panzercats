@@ -30,7 +30,6 @@ public class TankModule : MonoBehaviour {
 	
 	void Start()
 	{
-		Debug.Log (renderer.material);
 		if(damage == 0)
 		{
 			Debug.Log("You didn't set up the damage for " + gameObject.name);	

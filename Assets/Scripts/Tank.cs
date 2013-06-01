@@ -153,8 +153,15 @@ public class Tank : MonoBehaviour {
 	{		
 		if(col.collider.CompareTag("Bullet"))
 		{
-			foreach(ContactPoint c in col.contacts)
-				c.thisCollider.GetComponent<TankModule>().WasHit();
+			foreach(ContactPoint c in col.contacts) {
+				if( c.thisCollider ) {
+					TankModule m = c.thisCollider.GetComponent<TankModule>();
+					if( m ) {
+						m.WasHit();
+						}
+					}
+				}
+
 		}
 			//networkView.RPC("TakeDamage", RPCMode.Others, 5f);
 		//	TakeDamage(5f);
