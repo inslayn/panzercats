@@ -7,14 +7,17 @@ public class Tank : MonoBehaviour {
 	ParticleSystem dustParticle = null;
 	
 	[SerializeField]
-	Transform turrentTransform;
-	
-	[SerializeField]
 	GameObject bulletPrefab;
 
 	[SerializeField]
 	Camera tankCamera = null;
-	
+
+	[SerializeField]
+	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null;
+
+	[SerializeField]
+	Collider cannonCollider = null;
+
 	Transform cachedTransform;
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
@@ -67,27 +70,17 @@ public class Tank : MonoBehaviour {
 	
 	IEnumerator FireBullet()
 	{
-		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, turrentTransform.position, Quaternion.identity, 0);
+		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity, 0);
 		
-		Physics.IgnoreCollision(bullet.collider, transform.collider);
+		Physics.IgnoreCollision(bullet.collider, cannonCollider );
 		
 		bullet.transform.parent = transform.parent;
-		
-//		GameObject b = ObjectPooler.Instance.BulletPool[0];
-//		
-//		b.SetActive(true);
-//		
-//		ObjectPooler.Instance.BulletPool.Remove(b);
-//		
-//		b.transform.position = turrentTransform.position;
-//		
-//		b.transform.rotation = Quaternion.identity;
-//		
+
+		Vector3 spawnPointVelocity = rigidbody.GetPointVelocity( bulletSpawnTransform.position );
+		bullet.rigidbody.velocity = spawnPointVelocity;
 		bullet.rigidbody.AddForce(cachedTransform.forward * 10f, ForceMode.Impulse);
-//		
+
 		yield return new WaitForSeconds(0.5f);
-//		
-//		ResetBullet(b);
 		
 		Network.Destroy(bullet.GetComponent<NetworkView>().viewID);
 	}
