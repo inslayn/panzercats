@@ -33,11 +33,11 @@ public class NetworkingManager : MonoBehaviour {
 		Network.DestroyPlayerObjects(player);
 	}
 	
-	void OnDisconnectedFromServer(NetworkDisconnection info)
-	{
-		Network.RemoveRPCs(Network.player);
-		Network.DestroyPlayerObjects(Network.player);
-	}
+//	void OnDisconnectedFromServer(NetworkDisconnection info)
+//	{
+//		Network.DestroyPlayerObjects(Network.player);
+//		Network.RemoveRPCs(Network.player);
+//	}
 	
 	void Update()
 	{	

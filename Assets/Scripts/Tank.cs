@@ -14,8 +14,8 @@ public class Tank : MonoBehaviour {
 	
 	Transform cachedTransform;
 	
-	float speed = 2f, rotationSpeed = 200f, vertical, horizontal;
-
+	float speed = 2f, rotationSpeed = 200f, vertical, horizontal, health = 100f;
+	
 	//----------------------------------------------------------------------------------------
 	
 	void Start()	
@@ -31,18 +31,21 @@ public class Tank : MonoBehaviour {
 	
 	void Update () 
 	{
-		vertical = Input.GetAxis("Vertical"); 
-		horizontal = Input.GetAxis("Horizontal");
-		
-		if(vertical != 0)
-//			cachedTransform.rigidbody.AddRelativeForce(Vector3.forward * speed * Time.deltaTime);
-        	cachedTransform.Translate(Vector3.forward * vertical * speed * Time.deltaTime);
-		
-		if(horizontal != 0)
-        	cachedTransform.Rotate(0, (horizontal * rotationSpeed) * Time.deltaTime, 0);
-		
-		if(Input.GetKeyDown(KeyCode.Space))
-			StartCoroutine(FireBullet());
+		if(!isDead)
+		{
+			vertical = Input.GetAxis("Vertical"); 
+			horizontal = Input.GetAxis("Horizontal");
+			
+			if(vertical != 0)
+	//			cachedTransform.rigidbody.AddRelativeForce(Vector3.forward * speed * Time.deltaTime);
+	        	cachedTransform.Translate(Vector3.forward * vertical * speed * Time.deltaTime);
+			
+			if(horizontal != 0)
+	        	cachedTransform.Rotate(0, (horizontal * rotationSpeed) * Time.deltaTime, 0);
+			
+			if(Input.GetKeyDown(KeyCode.Space))
+				StartCoroutine(FireBullet());
+		}
 	}
 	
 	//----------------------------------------------------------------------------------------
@@ -50,6 +53,8 @@ public class Tank : MonoBehaviour {
 	IEnumerator FireBullet()
 	{
 		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, turrentTransform.position, Quaternion.identity, 0);
+		
+		Physics.IgnoreCollision(bullet.collider, transform.collider);
 		
 		bullet.transform.parent = transform.parent;
 		
@@ -69,7 +74,7 @@ public class Tank : MonoBehaviour {
 //		
 //		ResetBullet(b);
 		
-		Network.Destroy(bullet);
+		Network.Destroy(bullet.GetComponent<NetworkView>().viewID);
 	}
 	
 	//----------------------------------------------------------------------------------------
@@ -100,17 +105,21 @@ public class Tank : MonoBehaviour {
 	//----------------------------------------------------------------------------------------
 	
 	void OnCollisionEnter(Collision c)
-	{
+	{		
 		if(c.collider.CompareTag("Bullet"))
-			print("Collision");
+			//networkView.RPC("TakeDamage", RPCMode.Others, 5f);
+			TakeDamage(5f);
 	}
 	
 	//----------------------------------------------------------------------------------------
 	
-	[RPC]
 	void TakeDamage(float amount)
 	{
-//		if(Network.isServer)
-			
+		Mathf.Clamp(health -= amount, 0f, 100f);
+		
+		if(health <= 0)
+			isDead = true;
 	}
+	
+	bool isDead;
 }
