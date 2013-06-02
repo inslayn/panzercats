@@ -13,6 +13,8 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	Transform[] spawnPoints = null;
 
 	string serverIP = "172.21.10.252";
+    public string ServerIP { get { return serverIP; } set { serverIP = value; } }
+
 	int serverPort = 30000;
 	int numberPlayers = 0;
 
@@ -65,7 +67,23 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 //		Network.DestroyPlayerObjects(Network.player);
 //		Network.RemoveRPCs(Network.player);
 //	}
-	
+
+    public void CreateServer() {
+        if(Network.peerType == NetworkPeerType.Disconnected)
+            Network.InitializeServer(32, serverPort, true);
+            
+    }
+
+    public void JoinServer(string ip) {
+        if(Network.peerType == NetworkPeerType.Disconnected)
+            Network.Connect(ip, serverPort);
+    }
+
+    public void DisconnectServer() {
+        if(Network.peerType != NetworkPeerType.Disconnected)
+            Network.Disconnect();
+    }
+
 	void Update()
 	{	
 		if(Network.peerType == NetworkPeerType.Disconnected)
