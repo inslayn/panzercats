@@ -34,7 +34,9 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	
 	void SpawnPlayer()
 	{
-		Network.Instantiate(playerPrefab, spawnPoints[numberPlayers%spawnPoints.Length].position, Quaternion.identity, 0);
+		int spawnPoint = numberPlayers%spawnPoints.Length;
+		Debug.Log("USING SPAWN POINT: " + spawnPoint );
+		Network.Instantiate(playerPrefab, spawnPoints[spawnPoint].position, Quaternion.identity, 0);
 	}
 
 	public void RegisterTank( Tank playerTank ) {
@@ -48,12 +50,15 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 		Debug.Log("Number of players: " + numberPlayers);
 		if(numberPlayers == 1)
 		{
-			Debug.Log(" GAME OVER! ");
-			Network.Disconnect();
+			Invoke ("NetworkDisconnect",10f);
 		}
 		
 	}
-	
+
+	void NetworkDisconnect() {
+		Network.Disconnect();
+	}
+
 	void OnPlayerDisconnected(NetworkPlayer player)
 	{
 		Network.RemoveRPCs(player);
