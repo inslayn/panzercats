@@ -24,6 +24,9 @@ public class Tank : MonoBehaviour {
 	[SerializeField]
 	TankModule leftTread = null, rightTread = null, engine = null, turret = null, cannon = null;
 
+	[SerializeField]
+	ParticleSystem explosionParticles = null, cannonFireParticles = null;
+
 	Transform cachedTransform;
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal;
@@ -54,6 +57,8 @@ public class Tank : MonoBehaviour {
 		if( percentageHealth <= 0f ) {
 			isDead = true;
 			TankModule[] modules = GetComponentsInChildren<TankModule>();
+			ParticleSystem p = (ParticleSystem)Instantiate( explosionParticles, transform.position, Quaternion.identity );
+			Destroy( p.gameObject, 5f );
 			foreach( TankModule m in modules ) {
 				if( m != commandModule ) {
 					m.Detach();
@@ -111,7 +116,7 @@ public class Tank : MonoBehaviour {
 		{
 			if( Time.time > fireCooldownTime && Input.GetMouseButtonDown(0)) {
 				fireCooldownTime = Time.time + 2f;
-				StartCoroutine(FireBullet());
+				networkView.RPC("FireBullet",RPCMode.All);
 			}
 
 			Vector3 mouseDelta = Input.mousePosition-lastMousePosition;
@@ -129,22 +134,28 @@ public class Tank : MonoBehaviour {
 
 	
 	//----------------------------------------------------------------------------------------
-	
-	IEnumerator FireBullet()
+
+	[RPC]
+	void FireBullet()
 	{
-		GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity, 0);
+		if( networkView.isMine ) {
+			GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity, 0);
 
-		Physics.IgnoreCollision(bullet.collider, cannonCollider );
+			Physics.IgnoreCollision(bullet.collider, cannonCollider );
+			
+			bullet.transform.parent = transform.parent;
+
+			Vector3 spawnPointVelocity = rigidbody.GetPointVelocity( bulletSpawnTransform.position );
+			bullet.rigidbody.velocity = spawnPointVelocity;
+			bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 80f, ForceMode.Impulse);
+		}
+
+		ParticleSystem p = (ParticleSystem)Instantiate( cannonFireParticles, bulletSpawnTransform.position, Quaternion.FromToRotation( Vector3.forward, bulletSpawnTransform.forward ) );
+		Destroy( p.gameObject, 2f );
+
+	//	yield return new WaitForSeconds(5f);
 		
-		bullet.transform.parent = transform.parent;
 
-		Vector3 spawnPointVelocity = rigidbody.GetPointVelocity( bulletSpawnTransform.position );
-		bullet.rigidbody.velocity = spawnPointVelocity;
-		bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 80f, ForceMode.Impulse);
-
-		yield return new WaitForSeconds(5f);
-		
-		Network.Destroy(bullet.GetComponent<NetworkView>().viewID);
 	}
 	
 	//----------------------------------------------------------------------------------------
