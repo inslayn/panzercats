@@ -21,7 +21,7 @@ public class Tank : MonoBehaviour {
     GameObject[] disableIfNotMine = null;
 
 	[SerializeField]
-	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null, catTransform = null, cameraTransform = null, hatchTransform = null;
+	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null, catTransform = null, cameraTransform = null, hatchTransform = null, cannonRecoilTransform = null;
 
 	[SerializeField]
 	Collider cannonCollider = null;
@@ -189,7 +189,7 @@ public class Tank : MonoBehaviour {
 			lastMousePosition = Input.mousePosition;
 
 			turretTransform.Rotate( -mouseDelta.x*30f*Time.deltaTime, 0f, 0f );
-			cannonTransform.Rotate( 0f, mouseDelta.y*30f*Time.deltaTime, 0f );
+			cannonTransform.Rotate( 0f, mouseDelta.y*5f*Time.deltaTime, 0f );
 
 			Vector3 turretAngles = cannonTransform.localEulerAngles;
 			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-15f, 270f+15f );
@@ -214,18 +214,20 @@ public class Tank : MonoBehaviour {
 			
 			// Move cat up and down
 
-			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button0)) && currentCameraView == CameraView.firstPerson)
+			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button0)))
 			{
-				iTween.Stop(catTransform.gameObject);
+				iTween.Stop(cameraTransform.gameObject);
 				
-				float moveToPos = 0f;
+				float moveToPos = 0f, catMoveToPos = 0f;
 				
 				if(isInCockpit)
 				{
 					isInCockpit = false;
-					
+										
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.75f;
+						moveToPos = 0.3f;
+					
+					catMoveToPos = 1f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 160f, 0f), "isLocal", true));
 				}
@@ -234,18 +236,21 @@ public class Tank : MonoBehaviour {
 					isInCockpit = true;
 					
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.36f;
+						moveToPos = -0.3f;
 					
-						iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
+					catMoveToPos = -1f;
+					
+					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
 		
 				if(currentCameraView == CameraView.firstPerson)
-					iTween.MoveTo(catTransform.gameObject, iTween.Hash("x", moveToPos, "time", 1f, "isLocal", true));
+					iTween.MoveTo(cameraTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
+				
+				iTween.MoveTo(catTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
 			}
 		}
 	}
 
-	
 	//----------------------------------------------------------------------------------------
 
 	[RPC]
@@ -266,6 +271,8 @@ public class Tank : MonoBehaviour {
 		reloadAudioSource.time = 0f;
 		reloadAudioSource.Play();
 
+		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", 1f, "time", 0.25f, "islocal", true, "oncomplete", "OnRecoilComplete", "oncompletetarget", gameObject, "easetype", iTween.EaseType.easeOutBack ) );
+
 		ParticleSystem p = (ParticleSystem)Instantiate( cannonFireParticles, bulletSpawnTransform.position, Quaternion.FromToRotation( Vector3.forward, bulletSpawnTransform.forward ) );
 		Destroy( p.gameObject, 2f );
 
@@ -273,7 +280,11 @@ public class Tank : MonoBehaviour {
 		
 
 	}
-	
+
+	void OnRecoilComplete() {
+		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", 0f, "time", 1.65f, "islocal", true, "easetype", iTween.EaseType.easeOutQuint ) );
+	}
+
 	//----------------------------------------------------------------------------------------
 	
 	void ResetBullet(GameObject bullet)

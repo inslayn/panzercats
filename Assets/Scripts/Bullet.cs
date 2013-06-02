@@ -4,14 +4,20 @@ using System.Collections;
 public class Bullet : MonoBehaviour {
 
 	[SerializeField]
-	ParticleSystem explosionParticleSystem = null;
+	ParticleSystem explosionParticleSystem = null, trailParticleSystem = null;
 
 	int bounceCount = 2;
 
 	[RPC]
 	void Explode() {
-		Instantiate( explosionParticleSystem, transform.position, explosionParticleSystem.transform.rotation );
-		Network.Destroy(gameObject);
+		trailParticleSystem.transform.parent = null;
+		Destroy( trailParticleSystem.gameObject, 2f );
+
+		ParticleSystem p = (ParticleSystem)Instantiate( explosionParticleSystem, transform.position, explosionParticleSystem.transform.rotation );
+		Destroy ( p.gameObject, 5f );
+		if( networkView.isMine ) {
+			Network.Destroy(gameObject);
+		}
     }
 
     void OnCollisionEnter( Collision col ) {
