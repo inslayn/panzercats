@@ -21,7 +21,7 @@ public class Tank : MonoBehaviour {
     GameObject[] disableIfNotMine = null;
 
 	[SerializeField]
-	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null, catTransform = null, cameraTransform = null;
+	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null, catTransform = null, cameraTransform = null, hatchTransform = null;
 
 	[SerializeField]
 	Collider cannonCollider = null;
@@ -36,6 +36,9 @@ public class Tank : MonoBehaviour {
 
 	[SerializeField]
 	ParticleSystem explosionParticles = null, cannonFireParticles = null;
+
+	[SerializeField]
+	AudioSource engineAudioSource = null, reloadAudioSource = null;
 
 	Transform cachedTransform;
 	
@@ -126,6 +129,10 @@ public class Tank : MonoBehaviour {
 			float leftThrottle = horizontal+vertical;
 			float rightThrottle = -horizontal+vertical;
 
+			float engineIntensity = Mathf.Abs(leftThrottle)+Mathf.Abs(rightThrottle);
+			engineAudioSource.pitch = 1f + 0.5f*engineIntensity;
+			engineAudioSource.volume = Mathf.Clamp01( 0.5f + engineIntensity );
+
 			if( leftTread.Destroyed ) {
 				leftThrottle = 0f;
 			}
@@ -135,7 +142,10 @@ public class Tank : MonoBehaviour {
 			if( engine.Destroyed ) {
 				leftThrottle = 0f;
 				rightThrottle = 0f;
+				engineAudioSource.volume = Mathf.Lerp( engineAudioSource.volume, 0f, 0.1f*Time.deltaTime );
+				engineAudioSource.pitch = Mathf.Lerp( engineAudioSource.pitch, 0f, 0.1f*Time.deltaTime );
 			}
+
 
 			float treadDifference = leftThrottle-rightThrottle;
 			
@@ -207,23 +217,34 @@ public class Tank : MonoBehaviour {
 			}
 			
 			// Move cat up and down
-			
+
 			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button0)) && currentCameraView == CameraView.firstPerson)
 			{
+				iTween.Stop(catTransform.gameObject);
+				
 				float moveToPos = 0f;
 				
 				if(isInCockpit)
 				{
 					isInCockpit = false;
-					moveToPos = 1f;
+					
+					if(currentCameraView == CameraView.firstPerson)
+						moveToPos = -0.75f;
+					
+					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 160f, 0f), "isLocal", true));
 				}
 				else
 				{
 					isInCockpit = true;
-					moveToPos = -1f;
+					
+					if(currentCameraView == CameraView.firstPerson)
+						moveToPos = -0.36f;
+					
+						iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
 		
-				iTween.MoveAdd(catTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f));
+				if(currentCameraView == CameraView.firstPerson)
+					iTween.MoveTo(catTransform.gameObject, iTween.Hash("x", moveToPos, "time", 1f, "isLocal", true));
 			}
 		}
 	}
@@ -245,6 +266,9 @@ public class Tank : MonoBehaviour {
 			bullet.rigidbody.velocity = spawnPointVelocity;
 			bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 80f, ForceMode.Impulse);
 		}
+
+		reloadAudioSource.time = 0f;
+		reloadAudioSource.Play();
 
 		ParticleSystem p = (ParticleSystem)Instantiate( cannonFireParticles, bulletSpawnTransform.position, Quaternion.FromToRotation( Vector3.forward, bulletSpawnTransform.forward ) );
 		Destroy( p.gameObject, 2f );
