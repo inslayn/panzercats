@@ -17,9 +17,13 @@ public class Bullet : MonoBehaviour {
 		Destroy ( p.gameObject, 5f );
 
 		if( networkView.isMine ) {
-			Network.Destroy(gameObject);
+			Invoke("NetworkDestroy",1f);
 		}
     }
+
+	void NetworkDestroy() {
+		Network.Destroy( gameObject );
+	}
 
     void OnCollisionEnter( Collision col ) {
 		if( Network.isServer ) {
