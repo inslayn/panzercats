@@ -88,18 +88,4 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
         if(Network.peerType != NetworkPeerType.Disconnected)
             Network.Disconnect();
     }
-
-	void Update()
-	{	
-		if(Network.peerType == NetworkPeerType.Disconnected)
-		{
-			if(Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Joystick1Button7))
-				Network.Connect(serverIP, serverPort);
-		
-			if(Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.Joystick1Button6))
-				Network.InitializeServer(32, serverPort, true);
-		}
-		else if(Input.GetKeyDown(KeyCode.Minus))
-			Network.Disconnect();
-	}
 }
