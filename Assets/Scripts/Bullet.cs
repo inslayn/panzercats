@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour {
 
     }
 
-    void OnCollisionEnter() {
-
-        }
+    void OnCollisionEnter( Collision col ) {
+		//if( col.tr
+    }
 }
