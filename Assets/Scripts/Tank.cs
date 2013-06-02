@@ -217,13 +217,13 @@ public class Tank : MonoBehaviour {
 		
 			// Swap 1st person and 3rd person perspectives
 			
-			if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Joystick1Button4))
+			if(!OVRDevice.IsHMDPresent() && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Joystick1Button4)))
 			{
 				currentCameraView = CameraView.firstPerson;
 				cameraTransform.localPosition = origCamPos;
 				cameraTransform.localRotation = Quaternion.identity;
 			}
-			else if(Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Joystick1Button5))
+			else if(!OVRDevice.IsHMDPresent() && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Joystick1Button5)))
 			{
 				if(currentCameraView != CameraView.thirdPerson)
 					cameraTransform.Rotate(new Vector3(15f, 0f, 0f));
