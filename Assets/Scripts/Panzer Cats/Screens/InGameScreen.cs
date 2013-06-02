@@ -12,8 +12,7 @@ public class InGameScreen : U9SlideView {
 
     void Update() {
         if(Input.GetKeyUp(KeyCode.Escape)) {
-            NetworkingManager.Instance.DisconnectServer();
-            GameManager.Instance.HideCurrentScreen();
+			Application.LoadLevel(0);
         }
     }
 }
