@@ -33,7 +33,7 @@ public class NetworkingManager : MonoBehaviour {
 	void Start()
 	{
 		localAddress = GetLocalIPAddress();
-		
+		Debug.Log (localAddress);
 		GameState = (int)gameState.mainmenu;	
 	}
 
@@ -51,17 +51,6 @@ public class NetworkingManager : MonoBehaviour {
 	   }
 	   return localIP;
 	}
-	
-	void OnConnectedToServer()
-	{
-		SpawnPlayer();
-	}
-	
-	void SpawnPlayer()
-	{
-		Network.Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity, 0);
-	}
-	
 	
 	
 	
@@ -107,12 +96,10 @@ public class NetworkingManager : MonoBehaviour {
 			playerCount++;
 			
 			// allocate a networkViewID for the new player
-			
 			NetworkViewID newViewID = Network.AllocateViewID();
 			
 			// tell sender, others, and server to create the new player
-			
-			networkView.RPC("JoinPlayer", RPCMode.All, newViewID, Vector3.zero, p);
+			SpawnPlayer();
 				
 			Debug.Log("Player " + newViewID.ToString() + " connected from " + p.ipAddress + ":" + p.port);
 		}
@@ -120,51 +107,11 @@ public class NetworkingManager : MonoBehaviour {
 	
 	//----------------------------------------------------------------------------------------
 	
-	[RPC]
-	void JoinPlayer(NetworkViewID newPlayerView, Vector3 pos, NetworkPlayer p)
+	void SpawnPlayer()
 	{
-		// instantiate the prefab
-		// and set some of its properties
-		
-		GameObject newPlayer = Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity) as GameObject;
-		newPlayer.GetComponent<NetworkView>().viewID = newPlayerView;
-		newPlayer.tag = "Player";
-		
-		//players.Add(p,newPlayer);
-		
-		if(Network.isClient) 
-		{
-			if(p.ipAddress == localAddress)
-			{
-				Debug.Log("Server accepted my connection request, I am real player now: " + newPlayerView.ToString());
-				
-				// because this is the local player, activate the character controller
-				newPlayer.GetComponent<Tank>().IsLocalPlayer = true;
-				
-				// also, set the global localPlayerObject as a convenience variable
-				// to easily find the local player GameObject to send position updates
-				
-				localPlayerObject = newPlayer;
-				
-				// also, now put us into the "playing" GameState
-				
-				GameState = (int)gameState.playing;
-				
-				// and finally, attach the main camera to me
-				
-				Camera.main.transform.parent = newPlayer.transform;
-				Camera.main.transform.localPosition = new Vector3(0,1,0);
-				
-			} else {
-				
-				Debug.Log("Another player connected: " + newPlayerView.ToString());
-				
-				// because this in not the local player, deactivate the character controller
-				newPlayer.GetComponent<Tank>().IsLocalPlayer = false;
-			}
-		}
-		
+		Network.Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity, 0);
 	}
+	
 	
 	//----------------------------------------------------------------------------------------
 	
