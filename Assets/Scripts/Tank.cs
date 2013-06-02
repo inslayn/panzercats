@@ -51,6 +51,12 @@ public class Tank : MonoBehaviour {
 	//Player joined the game
 	public event System.Action Died;
 
+    [SerializeField]
+    GameObject riftCamera;
+
+    [SerializeField]
+    Camera mouseCamera;
+
 	//----------------------------------------------------------------------------------------
 	
 	void Start()	
@@ -58,13 +64,18 @@ public class Tank : MonoBehaviour {
 		//enabled = networkView.isMine;
 		Debug.Log("networkView.isMine = " + networkView.isMine );
 
-		if( !networkView.isMine ) {
-
-			foreach( GameObject g in disableIfNotMine ) {
-				Debug.Log("DISABLE: " + g );
-				g.SetActive(false);
-			}
-		}
+        if(networkView.isMine) {
+            if(!OVRDevice.IsHMDPresent()) {
+                riftCamera.SetActive(false);
+                mouseCamera.enabled = true;
+            }
+        }
+        else {
+            foreach(GameObject g in disableIfNotMine) {
+                Debug.Log("DISABLE: " + g);
+                g.SetActive(false);
+            }
+        }
 
 		Screen.lockCursor = true;
 
@@ -234,16 +245,16 @@ public class Tank : MonoBehaviour {
 				{
 					isInCockpit = true;
 					
-					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.6f;
+					//if(currentCameraView == CameraView.firstPerson)
+					//	moveToPos = -0.6f;
 					
 					catMoveToPos = -1.89f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
 		
-				if(currentCameraView == CameraView.firstPerson)
-					iTween.MoveTo(cameraTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
+				//if(currentCameraView == CameraView.firstPerson)
+				//	iTween.MoveTo(cameraTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
 				
 				iTween.MoveTo(catTransform.gameObject, iTween.Hash("y", catMoveToPos, "time", 1f, "isLocal", true));
 			}
