@@ -36,7 +36,7 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	
 	void SpawnPlayer()
 	{
-		int spawnPoint = numberPlayers%spawnPoints.Length;
+		int spawnPoint = numberPlayers;
 		Debug.Log("USING SPAWN POINT: " + spawnPoint );
 		Network.Instantiate(playerPrefab, spawnPoints[spawnPoint].position, Quaternion.identity, 0);
 	}
