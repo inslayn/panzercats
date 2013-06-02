@@ -253,7 +253,7 @@ public class Tank : MonoBehaviour {
 
 	//----------------------------------------------------------------------------------------
 
-	void OnNetworkInstantiate() {
+	void OnNetworkInstantiate( NetworkMessageInfo info ) {
 		NetworkingManager.Instance.RegisterTank(this);
 	}
 
