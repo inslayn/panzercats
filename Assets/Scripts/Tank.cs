@@ -29,6 +29,20 @@ public class Tank : MonoBehaviour {
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal;
 
 	float fireCooldownTime;
+	
+	bool isLocalPlayer = false;
+
+	public bool IsLocalPlayer {
+		get {
+			return this.isLocalPlayer;
+		}
+		set {
+			isLocalPlayer = value;
+		}
+	}
+
+	//Player joined the game
+	public event System.Action<int> Joined;
 
 	//----------------------------------------------------------------------------------------
 	
