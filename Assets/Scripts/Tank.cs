@@ -229,7 +229,7 @@ public class Tank : MonoBehaviour {
 					cameraTransform.Rotate(new Vector3(15f, 0f, 0f));
 				
 				currentCameraView = CameraView.thirdPerson;
-				cameraTransform.localPosition = new Vector3(0f, 1.43f, -8.17f);
+				cameraTransform.localPosition = new Vector3(0f, 3f, -3f);
 			}
 			
 			// Move cat up and down
