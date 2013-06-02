@@ -97,8 +97,7 @@ public class NetworkingManager : MonoBehaviour {
 			
 			// allocate a networkViewID for the new player
 			NetworkViewID newViewID = Network.AllocateViewID();
-			
-			// tell sender, others, and server to create the new player
+		
 			SpawnPlayer();
 				
 			Debug.Log("Player " + newViewID.ToString() + " connected from " + p.ipAddress + ":" + p.port);
@@ -127,8 +126,7 @@ public class NetworkingManager : MonoBehaviour {
 			Debug.Log("Player " + player.ToString() + " disconnected.");
 			// we send this to everyone, including to
 			// ourself (the server) to clean-up
-			
-			networkView.RPC("DisconnectPlayer", RPCMode.All, player);
+			Network.RemoveRPCs(player);
 		}
 	}
 	
