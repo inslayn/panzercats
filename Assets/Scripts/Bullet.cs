@@ -11,7 +11,9 @@ public class Bullet : MonoBehaviour {
 	[RPC]
 	void Explode() {
 		Instantiate( explosionParticleSystem, transform.position, explosionParticleSystem.transform.rotation );
-		Destroy(gameObject);
+		if( Network.isServer ) {
+			Network.Destroy(gameObject);
+		}
     }
 
     void OnCollisionEnter( Collision col ) {
