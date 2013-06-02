@@ -48,19 +48,8 @@ public class Tank : MonoBehaviour {
 	
 	bool isInCockpit, isDead;
 
-	bool isLocalPlayer = false;
-
-	public bool IsLocalPlayer {
-		get {
-			return this.isLocalPlayer;
-		}
-		set {
-			isLocalPlayer = value;
-		}
-	}
-
 	//Player joined the game
-	public event System.Action<int> Joined;
+	public event System.Action Died;
 
 	//----------------------------------------------------------------------------------------
 	
@@ -101,6 +90,7 @@ public class Tank : MonoBehaviour {
 					m.Detach();
 				}
 			}
+			OnDied();
 			Invoke ("NetworkDestroy",10f);
 		}
 	}
@@ -108,9 +98,15 @@ public class Tank : MonoBehaviour {
 	//----------------------------------------------------------------------------------------
 	
 	void NetworkDestroy() {
-		if( Network.isServer ) {
+		if( networkView.isMine ) {
 			Network.Destroy(gameObject);
 		}
+	}
+	
+	void OnDied()
+	{
+		if(Died != null)	
+			Died();
 	}
 	
 	//----------------------------------------------------------------------------------------

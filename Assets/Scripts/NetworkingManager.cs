@@ -4,13 +4,14 @@ using System.Collections;
 public class NetworkingManager : MonoBehaviour {
 	
 	[SerializeField]
-	GameObject playerPrefab;
+	Tank playerPrefab;
 	
 	[SerializeField]
 	Transform spawnTransform;
 	
 	string serverIP = "172.21.10.252";
 	int serverPort = 30000;
+	int numberPlayers = 0;
 	
 	void OnServerInitialized()
 	{
@@ -24,7 +25,21 @@ public class NetworkingManager : MonoBehaviour {
 	
 	void SpawnPlayer()
 	{
-		Network.Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity, 0);
+		Tank playerTank = (Tank)Network.Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity, 0);
+		
+		playerTank.Died += OnPlayerDied;
+		numberPlayers++;
+	}
+	
+	void OnPlayerDied()
+	{
+		numberPlayers--;	
+		if(numberPlayers == 0)
+		{
+			Debug.Log(" GAME OVER! ");
+			Network.Disconnect();
+		}
+		
 	}
 	
 	void OnPlayerDisconnected(NetworkPlayer player)
