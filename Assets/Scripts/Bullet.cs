@@ -15,6 +15,7 @@ public class Bullet : MonoBehaviour {
 
 		ParticleSystem p = (ParticleSystem)Instantiate( explosionParticleSystem, transform.position, explosionParticleSystem.transform.rotation );
 		Destroy ( p.gameObject, 5f );
+
 		if( networkView.isMine ) {
 			Network.Destroy(gameObject);
 		}
