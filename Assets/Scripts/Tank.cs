@@ -68,7 +68,7 @@ public class Tank : MonoBehaviour {
 	}
 
 	void HandleDamaged( float percentageHealth ) {
-		if( percentageHealth <= 0f ) {
+		if( !isDead && percentageHealth <= 0f ) {
 			isDead = true;
 			TankModule[] modules = GetComponentsInChildren<TankModule>();
 			ParticleSystem p = (ParticleSystem)Instantiate( explosionParticles, transform.position, Quaternion.identity );
@@ -84,7 +84,7 @@ public class Tank : MonoBehaviour {
 
 	void NetworkDestroy() {
 		if( Network.isServer ) {
-			Network.Destroy( gameObject );
+			Network.Destroy( networkView.viewID );
 		}
 	}
 	//----------------------------------------------------------------------------------------
