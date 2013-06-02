@@ -66,6 +66,8 @@ public class Tank : MonoBehaviour {
 			}
 		}
 
+		Screen.lockCursor = true;
+
 		cachedTransform = transform;
 		
 		origCamPos = cameraTransform.localPosition;
@@ -184,12 +186,9 @@ public class Tank : MonoBehaviour {
 			turretTransform.Rotate( -rotationY * Time.deltaTime, 0f, 0f );
 			cannonTransform.Rotate( 0f, -rotationX * Time.deltaTime, 0f );
 			rotationY = rotationX = 0f;
-			
-			Vector3 mouseDelta = Input.mousePosition-lastMousePosition;
-			lastMousePosition = Input.mousePosition;
 
-			turretTransform.Rotate( -mouseDelta.x*30f*Time.deltaTime, 0f, 0f );
-			cannonTransform.Rotate( 0f, mouseDelta.y*5f*Time.deltaTime, 0f );
+			turretTransform.Rotate( -Input.GetAxis("Mouse X")*80f*Time.deltaTime, 0f, 0f );
+			cannonTransform.Rotate( 0f, Input.GetAxis("Mouse Y")*5f*Time.deltaTime, 0f );
 
 			Vector3 turretAngles = cannonTransform.localEulerAngles;
 			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-15f, 270f+15f );
