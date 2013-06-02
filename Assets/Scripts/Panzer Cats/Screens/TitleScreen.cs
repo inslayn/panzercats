@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TitleScreen : U9SlideView {
 	protected override void EndDisplay() {
-		Invoke("Menu", 3f);
+		Invoke("Menu", 2f);
 	}
 	
 	void Menu() {
