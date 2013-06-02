@@ -81,6 +81,7 @@ public class TankModule : MonoBehaviour {
 
 	protected void OnDamaged() {
 		//Debug.Log ("Module HP: " + name + " = " + currentHP );
+		AudioController.Play( "Miaow", transform );
 
 		if(currentHP <= 0)
 			DisableModule();
@@ -101,6 +102,7 @@ public class TankModule : MonoBehaviour {
 			transform.parent = null;
 			Rigidbody r = gameObject.AddComponent<Rigidbody>();
 			r.AddForce( 2f*Vector3.up + 3f*Random.onUnitSphere, ForceMode.Impulse );
+			Destroy(this);
 		}
 	}
 
