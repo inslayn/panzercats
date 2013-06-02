@@ -37,6 +37,9 @@ public class Tank : MonoBehaviour {
 	[SerializeField]
 	ParticleSystem explosionParticles = null, cannonFireParticles = null;
 
+	[SerializeField]
+	AudioSource engineAudioSource = null, reloadAudioSource = null;
+
 	Transform cachedTransform;
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal;
@@ -126,6 +129,10 @@ public class Tank : MonoBehaviour {
 			float leftThrottle = horizontal+vertical;
 			float rightThrottle = -horizontal+vertical;
 
+			float engineIntensity = Mathf.Abs(leftThrottle)+Mathf.Abs(rightThrottle);
+			engineAudioSource.pitch = 1f + 0.5f*engineIntensity;
+			engineAudioSource.volume = Mathf.Clamp01( 0.5f + engineIntensity );
+
 			if( leftTread.Destroyed ) {
 				leftThrottle = 0f;
 			}
@@ -135,7 +142,10 @@ public class Tank : MonoBehaviour {
 			if( engine.Destroyed ) {
 				leftThrottle = 0f;
 				rightThrottle = 0f;
+				engineAudioSource.volume = Mathf.Lerp( engineAudioSource.volume, 0f, 0.1f*Time.deltaTime );
+				engineAudioSource.pitch = Mathf.Lerp( engineAudioSource.pitch, 0f, 0.1f*Time.deltaTime );
 			}
+
 
 			float treadDifference = leftThrottle-rightThrottle;
 			
@@ -233,6 +243,9 @@ public class Tank : MonoBehaviour {
 			bullet.rigidbody.velocity = spawnPointVelocity;
 			bullet.rigidbody.AddForce(bulletSpawnTransform.forward * 80f, ForceMode.Impulse);
 		}
+
+		reloadAudioSource.time = 0f;
+		reloadAudioSource.Play();
 
 		ParticleSystem p = (ParticleSystem)Instantiate( cannonFireParticles, bulletSpawnTransform.position, Quaternion.FromToRotation( Vector3.forward, bulletSpawnTransform.forward ) );
 		Destroy( p.gameObject, 2f );
