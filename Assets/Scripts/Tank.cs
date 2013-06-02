@@ -231,7 +231,7 @@ public class Tank : MonoBehaviour {
 					if(currentCameraView == CameraView.firstPerson)
 						moveToPos = 0.3f;
 					
-					catMoveToPos = 1f;
+					catMoveToPos = -0.88f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 160f, 0f), "isLocal", true));
 				}
@@ -242,7 +242,7 @@ public class Tank : MonoBehaviour {
 					if(currentCameraView == CameraView.firstPerson)
 						moveToPos = -0.3f;
 					
-					catMoveToPos = -1f;
+					catMoveToPos = -1.89f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
@@ -250,7 +250,7 @@ public class Tank : MonoBehaviour {
 				if(currentCameraView == CameraView.firstPerson)
 					iTween.MoveTo(cameraTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
 				
-				iTween.MoveTo(catTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
+				iTween.MoveTo(catTransform.gameObject, iTween.Hash("y", catMoveToPos, "time", 1f, "isLocal", true));
 			}
 		}
 	}

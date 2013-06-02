@@ -82,6 +82,7 @@ ModelImporter:
     7400000: Default Take
     7400002: IdleSitting
     9500000: //RootNode
+    11100000: //RootNode
     13700000: Circle
     13700002: Circle_001
   materials:
@@ -134,5 +135,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   additionalBone: 1
-  animationType: 2
+  animationType: 1
   userData: 
