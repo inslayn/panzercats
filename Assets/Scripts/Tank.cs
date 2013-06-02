@@ -46,7 +46,7 @@ public class Tank : MonoBehaviour {
 
 	float fireCooldownTime;
 	
-	bool isInCockpit, isDead;
+	bool isInCockpit = true, isDead;
 
 	//Player joined the game
 	public event System.Action Died;
@@ -253,7 +253,7 @@ public class Tank : MonoBehaviour {
 
 	//----------------------------------------------------------------------------------------
 
-	void OnNetworkInstantiate() {
+	void OnNetworkInstantiate( NetworkMessageInfo info ) {
 		NetworkingManager.Instance.RegisterTank(this);
 	}
 
@@ -275,7 +275,7 @@ public class Tank : MonoBehaviour {
 		reloadAudioSource.time = 0f;
 		reloadAudioSource.Play();
 
-		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", 1f, "time", 0.25f, "islocal", true, "oncomplete", "OnRecoilComplete", "oncompletetarget", gameObject, "easetype", iTween.EaseType.easeOutBack ) );
+		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", .125f, "time", 0.25f, "islocal", true, "oncomplete", "OnRecoilComplete", "oncompletetarget", gameObject, "easetype", iTween.EaseType.easeOutBack ) );
 
 		ParticleSystem p = (ParticleSystem)Instantiate( cannonFireParticles, bulletSpawnTransform.position, Quaternion.FromToRotation( Vector3.forward, bulletSpawnTransform.forward ) );
 		Destroy( p.gameObject, 2f );
