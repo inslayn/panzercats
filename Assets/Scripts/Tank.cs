@@ -10,7 +10,7 @@ public class Tank : MonoBehaviour {
 	GameObject bulletPrefab;
 
 	[SerializeField]
-	Camera tankCamera = null;
+    GameObject[] disableIfNotMine = null;
 
 	[SerializeField]
 	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null;
@@ -20,6 +20,9 @@ public class Tank : MonoBehaviour {
 
 	[SerializeField]
 	TankModule commandModule = null;
+
+	[SerializeField]
+	TankModule leftTread = null, rightTread = null, engine = null, turret = null, cannon = null;
 
 	Transform cachedTransform;
 	
@@ -32,7 +35,11 @@ public class Tank : MonoBehaviour {
 	void Start()	
 	{
 		//enabled = networkView.isMine;
-		tankCamera.enabled = networkView.isMine;
+		if( !networkView.isMine ) {
+			foreach( GameObject g in disableIfNotMine ) {
+				g.SetActive(false);
+			}
+		}
 
 		cachedTransform = transform;
 		
@@ -76,7 +83,18 @@ public class Tank : MonoBehaviour {
 			float forwardThrottle = vertical;
 			float leftThrottle = horizontal+vertical;
 			float rightThrottle = -horizontal+vertical;
-			
+
+			if( leftTread.Destroyed ) {
+				leftThrottle = 0f;
+			}
+			if( rightTread.Destroyed ) {
+				rightThrottle = 0f;
+			}
+			if( engine.Destroyed ) {
+				leftThrottle = 0f;
+				rightThrottle = 0f;
+			}
+
 			float treadDifference = leftThrottle-rightThrottle;
 			
 			rigidbody.AddTorque( 0, 10f*(treadDifference * rotationSpeed)/(1f+3f*rigidbody.velocity.magnitude), 0 );
