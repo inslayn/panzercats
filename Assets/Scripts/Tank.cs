@@ -106,7 +106,7 @@ public class Tank : MonoBehaviour {
 	
 	void NetworkDestroy() {
 		if( Network.isServer ) {
-			Network.Destroy( networkView.viewID );
+			Network.Destroy( gameObject);
 		}
 	}
 	
