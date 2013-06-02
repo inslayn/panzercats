@@ -64,8 +64,12 @@ public class Tank : MonoBehaviour {
 	void Start()	
 	{
 		//enabled = networkView.isMine;
+		Debug.Log("networkView.isMine = " + networkView.isMine );
+
 		if( !networkView.isMine ) {
+
 			foreach( GameObject g in disableIfNotMine ) {
+				Debug.Log("DISABLE: " + g );
 				g.SetActive(false);
 			}
 		}
