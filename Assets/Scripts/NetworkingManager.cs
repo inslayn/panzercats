@@ -46,9 +46,13 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 		if(numberPlayers == 1)
 		{
 			Debug.Log(" GAME OVER! ");
-			Network.Disconnect();
+			Invoke ("DisconnectNetwork",5f);
 		}
 		
+	}
+
+	void DisconnectNetwork() {
+		Network.Disconnect();
 	}
 	
 	void OnPlayerDisconnected(NetworkPlayer player)
@@ -67,10 +71,10 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	{	
 		if(Network.peerType == NetworkPeerType.Disconnected)
 		{
-			if(Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Joystick1Button6))
+			if(Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Joystick1Button7))
 				Network.Connect(serverIP, serverPort);
 		
-			if(Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.Joystick1Button7))
+			if(Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.Joystick1Button6))
 				Network.InitializeServer(32, serverPort, true);
 		}
 		else if(Input.GetKeyDown(KeyCode.Minus))
