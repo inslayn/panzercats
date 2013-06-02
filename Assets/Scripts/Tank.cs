@@ -21,7 +21,7 @@ public class Tank : MonoBehaviour {
     GameObject[] disableIfNotMine = null;
 
 	[SerializeField]
-	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null, catTransform = null, cameraTransform = null;
+	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null, catTransform = null, cameraTransform = null, hatchTransform = null;
 
 	[SerializeField]
 	Collider cannonCollider = null;
@@ -185,22 +185,33 @@ public class Tank : MonoBehaviour {
 			
 			// Move cat up and down
 			
-			if(Input.GetMouseButtonDown(1) && currentCameraView == CameraView.firstPerson)
+			if(Input.GetMouseButtonDown(1))
 			{
+				iTween.Stop(catTransform.gameObject);
+				
 				float moveToPos = 0f;
 				
 				if(isInCockpit)
 				{
 					isInCockpit = false;
-					moveToPos = 1f;
+					
+					if(currentCameraView == CameraView.firstPerson)
+						moveToPos = -0.75f;
+					
+					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 160f, 0f), "isLocal", true));
 				}
 				else
 				{
 					isInCockpit = true;
-					moveToPos = -1f;
+					
+					if(currentCameraView == CameraView.firstPerson)
+						moveToPos = -0.36f;
+					
+						iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
 		
-				iTween.MoveAdd(catTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f));
+				if(currentCameraView == CameraView.firstPerson)
+					iTween.MoveTo(catTransform.gameObject, iTween.Hash("x", moveToPos, "time", 1f, "isLocal", true));
 			}
 		}
 	}
