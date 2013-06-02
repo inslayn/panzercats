@@ -212,7 +212,7 @@ public class Tank : MonoBehaviour {
 			cannonTransform.Rotate( 0f, Input.GetAxis("Mouse Y")*5f*Time.deltaTime, 0f );
 
 			Vector3 turretAngles = cannonTransform.localEulerAngles;
-			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-15f, 270f+15f );
+			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-3f, 270f+15f );
 			cannonTransform.localEulerAngles = turretAngles;
 		
 			// Swap 1st person and 3rd person perspectives
