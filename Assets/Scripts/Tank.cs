@@ -39,7 +39,10 @@ public class Tank : MonoBehaviour {
 
 	[SerializeField]
 	AudioSource engineAudioSource = null, reloadAudioSource = null;
-
+	
+	[SerializeField]
+	Material tankMaterial = null;
+	
 	Transform cachedTransform;
 	
 	float speed = 2f, rotationSpeed = 200f, vertical, horizontal;
@@ -120,6 +123,13 @@ public class Tank : MonoBehaviour {
 	{
 		if(Died != null)	
 			Died();
+	}
+	
+	//----------------------------------------------------------------------------------------
+	
+	public void SetTankTexture(Texture newTexture)
+	{
+		tankMaterial.SetTexture("_MainTex", newTexture);	
 	}
 	
 	//----------------------------------------------------------------------------------------

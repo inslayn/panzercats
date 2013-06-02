@@ -11,7 +11,10 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 
 	[SerializeField]
 	Transform[] spawnPoints = null;
-
+	
+	[SerializeField]
+	Texture[] tankTextures = null;
+	
 	string serverIP = "172.21.10.252";
     public string ServerIP { get { return serverIP; } set { serverIP = value; } }
 
@@ -36,12 +39,13 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	
 	void SpawnPlayer()
 	{
-		int spawnPoint = numberPlayers;
+		int spawnPoint = Random.Range(0, spawnPoints.Length);
 		Debug.Log("USING SPAWN POINT: " + spawnPoint );
 		Network.Instantiate(playerPrefab, spawnPoints[spawnPoint].position, Quaternion.identity, 0);
 	}
 
 	public void RegisterTank( Tank playerTank ) {
+		playerTank.SetTankTexture(tankTextures[Random.Range(0, tankTextures.Length)]);
 		playerTank.Died += OnPlayerDied;
 		numberPlayers++;
 	}
