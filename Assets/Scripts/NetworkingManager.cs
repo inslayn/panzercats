@@ -43,10 +43,10 @@ public class NetworkingManager : MonoBehaviour {
 	{	
 		if(Network.peerType == NetworkPeerType.Disconnected)
 		{
-			if(Input.GetKeyDown(KeyCode.Equals))
+			if(Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Joystick1Button6))
 				Network.Connect(serverIP, serverPort);
 		
-			if(Input.GetKeyDown(KeyCode.N))
+			if(Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.Joystick1Button7))
 				Network.InitializeServer(32, serverPort, true);
 		}
 		else if(Input.GetKeyDown(KeyCode.Minus))
