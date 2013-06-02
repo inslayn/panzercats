@@ -222,14 +222,16 @@ public class Tank : MonoBehaviour {
 			{
 				iTween.Stop(cameraTransform.gameObject);
 				
-				float moveToPos = 0f;
+				float moveToPos = 0f, catMoveToPos = 0f;
 				
 				if(isInCockpit)
 				{
 					isInCockpit = false;
 										
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = 0.30f;
+						moveToPos = 0.3f;
+					
+					catMoveToPos = 1f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 160f, 0f), "isLocal", true));
 				}
@@ -238,13 +240,17 @@ public class Tank : MonoBehaviour {
 					isInCockpit = true;
 					
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.30f;
+						moveToPos = -0.3f;
+					
+					catMoveToPos = -1f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
 		
 				if(currentCameraView == CameraView.firstPerson)
 					iTween.MoveTo(cameraTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
+				
+				iTween.MoveTo(catTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
 			}
 		}
 	}
