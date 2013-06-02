@@ -214,7 +214,7 @@ public class Tank : MonoBehaviour {
 			
 			// Move cat up and down
 
-			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button0)))
+			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button9)))
 			{
 				iTween.Stop(cameraTransform.gameObject);
 				
@@ -253,7 +253,7 @@ public class Tank : MonoBehaviour {
 
 	//----------------------------------------------------------------------------------------
 
-	void OnNetworkInstantiate( NetworkMessageInfo info ) {
+	void OnNetworkInstantiate() {
 		NetworkingManager.Instance.RegisterTank(this);
 	}
 

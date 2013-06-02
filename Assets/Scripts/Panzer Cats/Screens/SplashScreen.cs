@@ -2,12 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 public class SplashScreen : U9FadeView {
-    protected override void EndHide() {
-        base.EndHide();
-        LoadTitles();
+    float delay = 3f;
+
+    protected override void Start() {
+        base.Start();
+        Invoke("LoadTitles", delay);
     }
 
     void LoadTitles() {
-        GameManager.Instance.Show(GameManager.Screens.Title);
+        GameManager.Instance.Show(GameManager.Screens.Title).Begin();
     }
 }
