@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour {
 	[RPC]
 	void Explode() {
 		Instantiate( explosionParticleSystem, transform.position, explosionParticleSystem.transform.rotation );
-		Network.Destroy(networkView.viewID);
+		Destroy(gameObject);
     }
 
     void OnCollisionEnter( Collision col ) {

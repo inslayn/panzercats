@@ -96,9 +96,9 @@ public class Tank : MonoBehaviour {
 			foreach( TankModule m in modules ) {
 				if( m != commandModule ) {
 					m.Detach();
-					Invoke ("NetworkDestroy",10f);
 				}
 			}
+			Invoke ("NetworkDestroy",10f);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class Tank : MonoBehaviour {
 	
 	void NetworkDestroy() {
 		if( Network.isServer ) {
-			Network.Destroy( gameObject);
+			Network.Destroy(gameObject);
 		}
 	}
 	
