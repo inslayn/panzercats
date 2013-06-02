@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class NetworkingManager : MonoBehaviour {
+public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	
 	[SerializeField]
 	Tank playerPrefab;
@@ -12,21 +12,29 @@ public class NetworkingManager : MonoBehaviour {
 	string serverIP = "172.21.10.252";
 	int serverPort = 30000;
 	int numberPlayers = 0;
-	
+
+	void Awake() {
+		Instance = this;
+	}
+
 	void OnServerInitialized()
 	{
+		Debug.Log ("OnServerInitialized");
 		SpawnPlayer();
 	}
 	
 	void OnConnectedToServer()
 	{
+		Debug.Log ("OnConnectedToServer");
 		SpawnPlayer();
 	}
 	
 	void SpawnPlayer()
 	{
-		Tank playerTank = (Tank)Network.Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity, 0);
-		
+		Network.Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity, 0);
+	}
+
+	public void RegisterTank( Tank playerTank ) {
 		playerTank.Died += OnPlayerDied;
 		numberPlayers++;
 	}
@@ -34,7 +42,8 @@ public class NetworkingManager : MonoBehaviour {
 	void OnPlayerDied()
 	{
 		numberPlayers--;	
-		if(numberPlayers == 0)
+		Debug.Log("Number of players: " + numberPlayers);
+		if(numberPlayers == 1)
 		{
 			Debug.Log(" GAME OVER! ");
 			Network.Disconnect();

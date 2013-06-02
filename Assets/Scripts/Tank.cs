@@ -253,6 +253,10 @@ public class Tank : MonoBehaviour {
 
 	//----------------------------------------------------------------------------------------
 
+	void OnNetworkInstantiate() {
+		NetworkingManager.Instance.RegisterTank(this);
+	}
+
 	[RPC]
 	void FireBullet()
 	{
