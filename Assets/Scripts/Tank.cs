@@ -235,7 +235,7 @@ public class Tank : MonoBehaviour {
 					isInCockpit = true;
 					
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.3f;
+						moveToPos = -0.6f;
 					
 					catMoveToPos = -1.89f;
 					
@@ -274,7 +274,7 @@ public class Tank : MonoBehaviour {
 		reloadAudioSource.time = 0f;
 		reloadAudioSource.Play();
 
-		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", .125f, "time", 0.25f, "islocal", true, "oncomplete", "OnRecoilComplete", "oncompletetarget", gameObject, "easetype", iTween.EaseType.easeOutBack ) );
+	//	iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", .05f, "time", 0.25f, "islocal", true, "oncomplete", "OnRecoilComplete", "oncompletetarget", gameObject, "easetype", iTween.EaseType.easeOutBack ) );
 
 		ParticleSystem p = (ParticleSystem)Instantiate( cannonFireParticles, bulletSpawnTransform.position, Quaternion.FromToRotation( Vector3.forward, bulletSpawnTransform.forward ) );
 		Destroy( p.gameObject, 2f );
@@ -285,7 +285,7 @@ public class Tank : MonoBehaviour {
 	}
 
 	void OnRecoilComplete() {
-		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", 0f, "time", 1.65f, "islocal", true, "easetype", iTween.EaseType.easeOutQuint ) );
+		//iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", 0f, "time", 1.65f, "islocal", true, "easetype", iTween.EaseType.easeOutQuint ) );
 	}
 
 	//----------------------------------------------------------------------------------------
