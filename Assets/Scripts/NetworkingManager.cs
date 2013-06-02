@@ -56,7 +56,7 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 		Debug.Log("Number of players: " + numberPlayers);
 		if(numberPlayers == 1)
 		{
-			Invoke ("NetworkDisconnect",10f);
+			//Invoke ("NetworkDisconnect",10f);
 		}
 		
 	}
