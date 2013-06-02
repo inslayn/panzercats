@@ -17,11 +17,12 @@ public class Bullet : MonoBehaviour {
 		Destroy ( p.gameObject, 5f );
 
 		if( networkView.isMine ) {
-			Invoke("NetworkDestroy",1f);
+			StartCoroutine(NetworkDestroy());
 		}
     }
 
-	void NetworkDestroy() {
+	IEnumerator NetworkDestroy() {
+		yield return null;
 		Network.Destroy( gameObject );
 	}
 
