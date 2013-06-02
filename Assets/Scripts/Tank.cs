@@ -218,18 +218,18 @@ public class Tank : MonoBehaviour {
 			
 			// Move cat up and down
 
-			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button0)) && currentCameraView == CameraView.firstPerson)
+			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button0)))
 			{
-				iTween.Stop(catTransform.gameObject);
+				iTween.Stop(cameraTransform.gameObject);
 				
 				float moveToPos = 0f;
 				
 				if(isInCockpit)
 				{
 					isInCockpit = false;
-					
+										
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.75f;
+						moveToPos = 0.30f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 160f, 0f), "isLocal", true));
 				}
@@ -238,18 +238,17 @@ public class Tank : MonoBehaviour {
 					isInCockpit = true;
 					
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.36f;
+						moveToPos = -0.30f;
 					
-						iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
+					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
 		
 				if(currentCameraView == CameraView.firstPerson)
-					iTween.MoveTo(catTransform.gameObject, iTween.Hash("x", moveToPos, "time", 1f, "isLocal", true));
+					iTween.MoveTo(cameraTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
 			}
 		}
 	}
 
-	
 	//----------------------------------------------------------------------------------------
 
 	[RPC]
