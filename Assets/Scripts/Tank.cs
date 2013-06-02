@@ -66,6 +66,8 @@ public class Tank : MonoBehaviour {
 			}
 		}
 
+		Screen.lockCursor = true;
+
 		cachedTransform = transform;
 		
 		origCamPos = cameraTransform.localPosition;
@@ -184,12 +186,9 @@ public class Tank : MonoBehaviour {
 			turretTransform.Rotate( -rotationY * Time.deltaTime, 0f, 0f );
 			cannonTransform.Rotate( 0f, -rotationX * Time.deltaTime, 0f );
 			rotationY = rotationX = 0f;
-			
-			Vector3 mouseDelta = Input.mousePosition-lastMousePosition;
-			lastMousePosition = Input.mousePosition;
 
-			turretTransform.Rotate( -mouseDelta.x*30f*Time.deltaTime, 0f, 0f );
-			cannonTransform.Rotate( 0f, mouseDelta.y*5f*Time.deltaTime, 0f );
+			turretTransform.Rotate( -Input.GetAxis("Mouse X")*80f*Time.deltaTime, 0f, 0f );
+			cannonTransform.Rotate( 0f, Input.GetAxis("Mouse Y")*5f*Time.deltaTime, 0f );
 
 			Vector3 turretAngles = cannonTransform.localEulerAngles;
 			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-15f, 270f+15f );
@@ -236,7 +235,7 @@ public class Tank : MonoBehaviour {
 					isInCockpit = true;
 					
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.3f;
+						moveToPos = -0.6f;
 					
 					catMoveToPos = -1.89f;
 					
@@ -275,7 +274,7 @@ public class Tank : MonoBehaviour {
 		reloadAudioSource.time = 0f;
 		reloadAudioSource.Play();
 
-		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", .125f, "time", 0.25f, "islocal", true, "oncomplete", "OnRecoilComplete", "oncompletetarget", gameObject, "easetype", iTween.EaseType.easeOutBack ) );
+	//	iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", .05f, "time", 0.25f, "islocal", true, "oncomplete", "OnRecoilComplete", "oncompletetarget", gameObject, "easetype", iTween.EaseType.easeOutBack ) );
 
 		ParticleSystem p = (ParticleSystem)Instantiate( cannonFireParticles, bulletSpawnTransform.position, Quaternion.FromToRotation( Vector3.forward, bulletSpawnTransform.forward ) );
 		Destroy( p.gameObject, 2f );
@@ -286,7 +285,7 @@ public class Tank : MonoBehaviour {
 	}
 
 	void OnRecoilComplete() {
-		iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", 0f, "time", 1.65f, "islocal", true, "easetype", iTween.EaseType.easeOutQuint ) );
+		//iTween.MoveTo( cannonRecoilTransform.gameObject, iTween.Hash( "x", 0f, "time", 1.65f, "islocal", true, "easetype", iTween.EaseType.easeOutQuint ) );
 	}
 
 	//----------------------------------------------------------------------------------------
