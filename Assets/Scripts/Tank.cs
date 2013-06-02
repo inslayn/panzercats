@@ -157,15 +157,38 @@ public class Tank : MonoBehaviour {
 
 	Vector3 lastMousePosition;
 	//Vector3 targetTurretAngles, targetCannonAngles;
-
+	
+	float rotationY = 0f, rotationX = 0f;
+	float joystickSpeed = 2000f, joystickClamp = 300f;
+	
 	void Update() {
 		if(!isDead && networkView.isMine)
 		{
-			if( Time.time > fireCooldownTime && Input.GetMouseButtonDown(0)) {
+			if( Time.time > fireCooldownTime && (Input.GetMouseButtonDown(0) || (Input.GetAxis("Fire2") == -1))) {
 				fireCooldownTime = Time.time + 2f;
 				networkView.RPC("FireBullet",RPCMode.All);
 			}
-
+			
+			// Right analog stick
+			float Xon = Mathf.Abs (Input.GetAxis("Joystick X"));
+			float Yon = Mathf.Abs (Input.GetAxis("Joystick Y"));
+			
+			if (Yon > 0.05f)
+			{
+				rotationY += Input.GetAxis("Joystick Y") * joystickSpeed;
+			}
+			if (Xon > 0.05f)
+			{
+				rotationX += Input.GetAxis("Joystick X") * joystickSpeed;
+			}
+			
+			rotationY = Mathf.Clamp(rotationY, -joystickClamp, joystickClamp);
+ 			rotationX = Mathf.Clamp(rotationX, -joystickClamp, joystickClamp);
+		
+			turretTransform.Rotate( -rotationY * Time.deltaTime, 0f, 0f );
+			cannonTransform.Rotate( 0f, -rotationX * Time.deltaTime, 0f );
+			rotationY = rotationX = 0f;
+			
 			Vector3 mouseDelta = Input.mousePosition-lastMousePosition;
 			lastMousePosition = Input.mousePosition;
 
@@ -178,13 +201,13 @@ public class Tank : MonoBehaviour {
 		
 			// Swap 1st person and 3rd person perspectives
 			
-			if(Input.GetKeyDown(KeyCode.Alpha1))
+			if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Joystick1Button4))
 			{
 				currentCameraView = CameraView.firstPerson;
 				cameraTransform.localPosition = origCamPos;
 				cameraTransform.localRotation = Quaternion.identity;
 			}
-			else if(Input.GetKeyDown(KeyCode.Alpha2))
+			else if(Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Joystick1Button5))
 			{
 				if(currentCameraView != CameraView.thirdPerson)
 					cameraTransform.Rotate(new Vector3(15f, 0f, 0f));
@@ -194,19 +217,19 @@ public class Tank : MonoBehaviour {
 			}
 			
 			// Move cat up and down
-			
-			if(Input.GetMouseButtonDown(1))
+
+			if((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Joystick1Button0)))
 			{
-				iTween.Stop(catTransform.gameObject);
+				iTween.Stop(cameraTransform.gameObject);
 				
 				float moveToPos = 0f;
 				
 				if(isInCockpit)
 				{
 					isInCockpit = false;
-					
+										
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.75f;
+						moveToPos = 0.30f;
 					
 					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 160f, 0f), "isLocal", true));
 				}
@@ -215,18 +238,17 @@ public class Tank : MonoBehaviour {
 					isInCockpit = true;
 					
 					if(currentCameraView == CameraView.firstPerson)
-						moveToPos = -0.36f;
+						moveToPos = -0.30f;
 					
-						iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
+					iTween.RotateTo(hatchTransform.gameObject, iTween.Hash("rotation", new Vector3(0f, 0f, 0f), "isLocal", true));
 				}
 		
 				if(currentCameraView == CameraView.firstPerson)
-					iTween.MoveTo(catTransform.gameObject, iTween.Hash("x", moveToPos, "time", 1f, "isLocal", true));
+					iTween.MoveTo(cameraTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f, "isLocal", true));
 			}
 		}
 	}
 
-	
 	//----------------------------------------------------------------------------------------
 
 	[RPC]
