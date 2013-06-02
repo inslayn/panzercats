@@ -8,7 +8,10 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	
 	[SerializeField]
 	Transform spawnTransform;
-	
+
+	[SerializeField]
+	Transform[] spawnPoints = null;
+
 	string serverIP = "172.21.10.252";
 	int serverPort = 30000;
 	int numberPlayers = 0;
@@ -31,7 +34,7 @@ public class NetworkingManager : MonoSingleton<NetworkingManager> {
 	
 	void SpawnPlayer()
 	{
-		Network.Instantiate(playerPrefab, spawnTransform.position, Quaternion.identity, 0);
+		Network.Instantiate(playerPrefab, spawnPoints[numberPlayers%spawnPoints.Length].position, Quaternion.identity, 0);
 	}
 
 	public void RegisterTank( Tank playerTank ) {
