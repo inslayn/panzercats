@@ -91,17 +91,17 @@ public class NetworkingManager : MonoBehaviour {
 	
 	void OnPlayerConnected(NetworkPlayer p) 
 	{
-		if(Network.isServer)
-		{
+//		if(Network.isServer)
+//		{
 			playerCount++;
 			
 			// allocate a networkViewID for the new player
-			NetworkViewID newViewID = Network.AllocateViewID();
+			//NetworkViewID newViewID = Network.AllocateViewID();
 		
 			SpawnPlayer();
 				
 			Debug.Log("Player " + newViewID.ToString() + " connected from " + p.ipAddress + ":" + p.port);
-		}
+		//}
     }
 	
 	//----------------------------------------------------------------------------------------
