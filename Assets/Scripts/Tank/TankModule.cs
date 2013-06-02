@@ -80,7 +80,7 @@ public class TankModule : MonoBehaviour {
 	}
 
 	protected void OnDamaged() {
-		Debug.Log ("Module HP: " + name + " = " + currentHP );
+		//Debug.Log ("Module HP: " + name + " = " + currentHP );
 
 		if(currentHP <= 0)
 			DisableModule();

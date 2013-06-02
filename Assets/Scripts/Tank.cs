@@ -3,6 +3,14 @@ using System.Collections;
 
 public class Tank : MonoBehaviour {
 	
+	public enum CameraView
+	{
+		firstPerson,
+		thirdPerson
+	};
+	
+	CameraView currentCameraView;
+	
 	[SerializeField]
 	ParticleSystem dustParticle = null;
 	
@@ -13,7 +21,7 @@ public class Tank : MonoBehaviour {
     GameObject[] disableIfNotMine = null;
 
 	[SerializeField]
-	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null;
+	Transform turretTransform = null, cannonTransform = null, bulletSpawnTransform = null, catTransform = null, cameraTransform = null;
 
 	[SerializeField]
 	Collider cannonCollider = null;
@@ -23,6 +31,8 @@ public class Tank : MonoBehaviour {
 
 	[SerializeField]
 	TankModule leftTread = null, rightTread = null, engine = null, turret = null, cannon = null;
+	
+	Vector3 origCamPos;
 
 	[SerializeField]
 	ParticleSystem explosionParticles = null, cannonFireParticles = null;
@@ -33,6 +43,8 @@ public class Tank : MonoBehaviour {
 
 	float fireCooldownTime;
 	
+	bool isInCockpit, isDead;
+
 	bool isLocalPlayer = false;
 
 	public bool IsLocalPlayer {
@@ -60,15 +72,19 @@ public class Tank : MonoBehaviour {
 
 		cachedTransform = transform;
 		
+		origCamPos = cameraTransform.localPosition;
+		
 		InvokeRepeating("CheckParticles", 0.1f, 1f);
 
 		lastMousePosition = Input.mousePosition;
 
 		commandModule.Damaged += HandleDamaged;
 	}
-
+	
+	//----------------------------------------------------------------------------------------
+	
 	void HandleDamaged( float percentageHealth ) {
-		if( percentageHealth <= 0f ) {
+		if( !isDead && percentageHealth <= 0f ) {
 			isDead = true;
 			TankModule[] modules = GetComponentsInChildren<TankModule>();
 			ParticleSystem p = (ParticleSystem)Instantiate( explosionParticles, transform.position, Quaternion.identity );
@@ -81,12 +97,15 @@ public class Tank : MonoBehaviour {
 			}
 		}
 	}
-
+	
+	//----------------------------------------------------------------------------------------
+	
 	void NetworkDestroy() {
 		if( Network.isServer ) {
-			Network.Destroy( gameObject );
+			Network.Destroy( networkView.viewID );
 		}
 	}
+	
 	//----------------------------------------------------------------------------------------
 
 	void FixedUpdate() {
@@ -142,7 +161,43 @@ public class Tank : MonoBehaviour {
 			Vector3 turretAngles = cannonTransform.localEulerAngles;
 			turretAngles.y = Mathf.Clamp( turretAngles.y, 270f-15f, 270f+15f );
 			cannonTransform.localEulerAngles = turretAngles;
-
+		
+			// Swap 1st person and 3rd person perspectives
+			
+			if(Input.GetKeyDown(KeyCode.Alpha1))
+			{
+				currentCameraView = CameraView.firstPerson;
+				cameraTransform.localPosition = origCamPos;
+				cameraTransform.localRotation = Quaternion.identity;
+			}
+			else if(Input.GetKeyDown(KeyCode.Alpha2))
+			{
+				if(currentCameraView != CameraView.thirdPerson)
+					cameraTransform.Rotate(new Vector3(15f, 0f, 0f));
+				
+				currentCameraView = CameraView.thirdPerson;
+				cameraTransform.localPosition = new Vector3(0f, 1.43f, -8.17f);
+			}
+			
+			// Move cat up and down
+			
+			if(Input.GetMouseButtonDown(1) && currentCameraView == CameraView.firstPerson)
+			{
+				float moveToPos = 0f;
+				
+				if(isInCockpit)
+				{
+					isInCockpit = false;
+					moveToPos = 1f;
+				}
+				else
+				{
+					isInCockpit = true;
+					moveToPos = -1f;
+				}
+		
+				iTween.MoveAdd(catTransform.gameObject, iTween.Hash("y", moveToPos, "time", 1f));
+			}
 		}
 	}
 
@@ -199,11 +254,8 @@ public class Tank : MonoBehaviour {
 	
 	//----------------------------------------------------------------------------------------
 
-
-
 	void OnCollisionEnter(Collision col)
 	{	
-
 		if( Network.isServer ) {
 			if(col.collider.CompareTag("Bullet"))
 			{
@@ -218,9 +270,5 @@ public class Tank : MonoBehaviour {
 
 			}
 		}
-
 	}
-
-	
-	bool isDead;
 }
