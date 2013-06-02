@@ -46,7 +46,7 @@ public class Tank : MonoBehaviour {
 
 	float fireCooldownTime;
 	
-	bool isInCockpit, isDead;
+	bool isInCockpit = true, isDead;
 
 	//Player joined the game
 	public event System.Action Died;
