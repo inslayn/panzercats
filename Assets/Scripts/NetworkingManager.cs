@@ -100,7 +100,7 @@ public class NetworkingManager : MonoBehaviour {
 		
 			SpawnPlayer();
 				
-			Debug.Log("Player " + newViewID.ToString() + " connected from " + p.ipAddress + ":" + p.port);
+		//	Debug.Log("Player " + newViewID.ToString() + " connected from " + p.ipAddress + ":" + p.port);
 		//}
     }
 	
