@@ -283,9 +283,9 @@ public class Tank : MonoBehaviour {
 		if( networkView.isMine ) {
 			GameObject bullet = (GameObject)Network.Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity, 0);
 
-			Physics.IgnoreCollision(bullet.collider, cannonCollider );
+			//Physics.IgnoreCollision(bullet.collider, cannonCollider );
 			
-			bullet.transform.parent = transform.parent;
+			//bullet.transform.parent = transform.parent;
 
 			Vector3 spawnPointVelocity = rigidbody.GetPointVelocity( bulletSpawnTransform.position );
 			bullet.rigidbody.velocity = spawnPointVelocity;
